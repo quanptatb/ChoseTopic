@@ -1,0 +1,1589 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meeting AI Analysis - Phân tích đề tài tốt nghiệp</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --ink:#17221f;
+      --muted:#5e6c67;
+      --soft:#f5efe3;
+      --paper:#fffaf0;
+      --line:rgba(23,34,31,.14);
+      --green:#1d5c4a;
+      --mint:#dff4ea;
+      --amber:#e0a22f;
+      --clay:#b85a38;
+      --navy:#17395c;
+      --blue:#dcecff;
+      --rose:#ffe7df;
+      --shadow:0 24px 70px rgba(33,42,37,.15);
+      --small-shadow:0 14px 34px rgba(33,42,37,.1);
+      --radius-xl:30px;
+      --radius-lg:22px;
+      --radius-md:16px;
+      --font-display:"Bahnschrift","Aptos Display","Trebuchet MS",sans-serif;
+      --font-body:"Aptos","Segoe UI Variable","Trebuchet MS",sans-serif;
+      --font-mono:"Cascadia Code","Consolas",monospace;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--ink);
+      font-family:var(--font-body);
+      background:
+        radial-gradient(circle at 8% 10%, rgba(224,162,47,.22), transparent 28rem),
+        radial-gradient(circle at 94% 4%, rgba(29,92,74,.2), transparent 31rem),
+        linear-gradient(135deg,#f7f0e3 0%,#edf5ee 42%,#fbf3e4 100%);
+    }
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.42;
+      background-image:
+        linear-gradient(rgba(23,34,31,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(23,34,31,.045) 1px, transparent 1px);
+      background-size:42px 42px;
+      mask-image:linear-gradient(to bottom, black, transparent 82%);
+    }
+
+    .page{
+      width:min(1180px,calc(100% - 32px));
+      margin:0 auto;
+      padding:34px 0 56px;
+      position:relative;
+    }
+    .hero{
+      position:relative;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.74);
+      border-radius:var(--radius-xl);
+      padding:34px;
+      background:
+        linear-gradient(135deg,rgba(255,250,240,.92),rgba(223,244,234,.78)),
+        radial-gradient(circle at top right,rgba(224,162,47,.18),transparent 24rem);
+      box-shadow:var(--shadow);
+    }
+    .hero::after{
+      content:"";
+      position:absolute;
+      width:360px;
+      height:360px;
+      right:-120px;
+      top:-160px;
+      border-radius:50%;
+      border:46px solid rgba(29,92,74,.12);
+    }
+    .hero-grid{
+      display:grid;
+      grid-template-columns:minmax(0,1.25fr) minmax(320px,.75fr);
+      gap:28px;
+      position:relative;
+      z-index:1;
+    }
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      width:max-content;
+      max-width:100%;
+      padding:8px 12px;
+      border:1px solid rgba(29,92,74,.2);
+      border-radius:999px;
+      color:var(--green);
+      background:rgba(255,255,255,.55);
+      font-size:13px;
+      font-weight:700;
+      letter-spacing:.02em;
+    }
+    .eyebrow::before{
+      content:"";
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:var(--amber);
+      box-shadow:0 0 0 6px rgba(224,162,47,.16);
+    }
+    h1{
+      margin:22px 0 16px;
+      max-width:820px;
+      font-family:var(--font-display);
+      font-size:clamp(38px,6vw,74px);
+      line-height:.96;
+      letter-spacing:-.06em;
+    }
+    .hero-copy{
+      margin:0;
+      max-width:740px;
+      color:var(--muted);
+      font-size:18px;
+      line-height:1.75;
+    }
+    .hero-copy strong{color:var(--ink)}
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:24px;
+    }
+    .btn{
+      border:0;
+      border-radius:999px;
+      padding:12px 17px;
+      font:700 14px var(--font-body);
+      color:#fff;
+      background:var(--green);
+      text-decoration:none;
+      box-shadow:0 12px 24px rgba(29,92,74,.2);
+      cursor:pointer;
+      transition:.2s ease;
+    }
+    .btn:hover{transform:translateY(-2px);box-shadow:0 18px 30px rgba(29,92,74,.24)}
+    .btn.secondary{
+      color:var(--green);
+      background:rgba(255,255,255,.66);
+      box-shadow:none;
+      border:1px solid rgba(29,92,74,.18);
+    }
+    .hero-panel{
+      align-self:stretch;
+      border:1px solid rgba(23,34,31,.1);
+      border-radius:26px;
+      padding:20px;
+      background:rgba(255,255,255,.58);
+      box-shadow:var(--small-shadow);
+      backdrop-filter:blur(12px);
+    }
+    .panel-title{
+      margin:0 0 14px;
+      font:800 17px var(--font-display);
+      letter-spacing:-.02em;
+    }
+    .score-ring{
+      display:grid;
+      place-items:center;
+      width:178px;
+      height:178px;
+      margin:4px auto 18px;
+      border-radius:50%;
+      background:conic-gradient(var(--green) 0 86%, rgba(29,92,74,.14) 86% 100%);
+      position:relative;
+    }
+    .score-ring::before{
+      content:"";
+      position:absolute;
+      inset:15px;
+      border-radius:50%;
+      background:var(--paper);
+    }
+    .score{
+      position:relative;
+      text-align:center;
+    }
+    .score b{
+      display:block;
+      font:900 48px/1 var(--font-display);
+      letter-spacing:-.05em;
+    }
+    .score span{
+      color:var(--muted);
+      font-size:12px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+    .verdict{
+      margin:0;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.65;
+    }
+    .verdict strong{color:var(--green)}
+
+    .metrics{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:14px;
+      margin:18px 0 24px;
+    }
+    .metric{
+      border:1px solid rgba(255,255,255,.72);
+      border-radius:22px;
+      padding:18px;
+      background:rgba(255,250,240,.78);
+      box-shadow:var(--small-shadow);
+    }
+    .metric b{
+      display:block;
+      font:900 34px/1 var(--font-display);
+      letter-spacing:-.04em;
+      color:var(--green);
+      margin-bottom:8px;
+    }
+    .metric span{
+      display:block;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.45;
+    }
+
+    .nav-wrap{
+      position:sticky;
+      top:12px;
+      z-index:5;
+      margin:22px 0;
+      padding:8px;
+      border:1px solid rgba(255,255,255,.75);
+      border-radius:999px;
+      background:rgba(255,250,240,.76);
+      box-shadow:0 10px 28px rgba(23,34,31,.1);
+      backdrop-filter:blur(16px);
+    }
+    .nav{
+      display:grid;
+      grid-template-columns:repeat(6,1fr);
+      gap:7px;
+    }
+    .tab-btn{
+      border:0;
+      border-radius:999px;
+      padding:12px 10px;
+      color:var(--muted);
+      background:transparent;
+      font:800 13px var(--font-body);
+      cursor:pointer;
+      transition:.2s ease;
+      white-space:nowrap;
+    }
+    .tab-btn:hover{background:rgba(29,92,74,.08);color:var(--green)}
+    .tab-btn.on{
+      color:#fff;
+      background:var(--green);
+      box-shadow:0 10px 22px rgba(29,92,74,.22);
+    }
+
+    .pane{display:none;animation:rise .35s ease both;scroll-margin-top:96px}
+    .pane.on{display:block}
+    @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+    .section-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap:18px;
+      margin:30px 0 16px;
+    }
+    .kicker{
+      margin:0 0 8px;
+      color:var(--clay);
+      font-size:12px;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+    }
+    h2{
+      margin:0;
+      font:900 clamp(26px,4vw,44px)/1.05 var(--font-display);
+      letter-spacing:-.05em;
+    }
+    .section-note{
+      margin:0;
+      max-width:520px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.65;
+    }
+    .grid-2{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+    }
+    .grid-3{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:16px;
+    }
+    .card{
+      position:relative;
+      overflow:hidden;
+      border:1px solid rgba(23,34,31,.11);
+      border-radius:var(--radius-lg);
+      padding:22px;
+      background:rgba(255,250,240,.76);
+      box-shadow:var(--small-shadow);
+    }
+    .card.dark{
+      color:#f6fff7;
+      background:
+        radial-gradient(circle at 88% 10%,rgba(224,162,47,.28),transparent 18rem),
+        linear-gradient(135deg,#1a3f35,#142822);
+    }
+    .card.dark .muted,
+    .card.dark p,
+    .card.dark li{color:rgba(246,255,247,.78)}
+    .card.dark h3,
+    .card.dark b{color:#fff}
+    .card h3{
+      margin:0 0 10px;
+      font:900 22px/1.12 var(--font-display);
+      letter-spacing:-.03em;
+    }
+    .card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.68;
+      font-size:14px;
+    }
+    .card ul{
+      margin:12px 0 0;
+      padding-left:18px;
+      color:var(--muted);
+      line-height:1.66;
+      font-size:14px;
+    }
+    .card li{margin:7px 0}
+    .tag-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:14px;
+    }
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      border-radius:999px;
+      padding:6px 10px;
+      color:var(--green);
+      background:var(--mint);
+      font-size:12px;
+      font-weight:800;
+    }
+    .tag.blue{color:var(--navy);background:var(--blue)}
+    .tag.amber{color:#6b4300;background:#fff0c9}
+    .tag.rose{color:#7b3322;background:var(--rose)}
+    .muted{color:var(--muted)}
+
+    .matrix{
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:16px;
+      align-items:stretch;
+    }
+    .flow{
+      display:grid;
+      gap:12px;
+    }
+    .flow-step{
+      display:grid;
+      grid-template-columns:48px minmax(0,1fr);
+      gap:14px;
+      align-items:start;
+      padding:16px;
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:rgba(255,255,255,.48);
+    }
+    .num{
+      display:grid;
+      place-items:center;
+      width:48px;
+      height:48px;
+      border-radius:16px;
+      color:#fff;
+      background:var(--green);
+      font:900 18px var(--font-display);
+      box-shadow:0 10px 20px rgba(29,92,74,.18);
+    }
+    .flow-step h3{
+      margin:0 0 4px;
+      font:900 17px var(--font-display);
+      letter-spacing:-.02em;
+    }
+    .flow-step p{
+      margin:0;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.62;
+    }
+    code{
+      font-family:var(--font-mono);
+      font-size:.9em;
+      border-radius:6px;
+      padding:1px 5px;
+      color:#164937;
+      background:rgba(29,92,74,.1);
+    }
+
+    .architecture{
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:12px;
+    }
+    .arch-box{
+      min-height:190px;
+      border-radius:22px;
+      padding:17px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.48);
+    }
+    .arch-box strong{
+      display:block;
+      margin-bottom:9px;
+      font:900 16px var(--font-display);
+      letter-spacing:-.02em;
+    }
+    .arch-box span{
+      display:block;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.58;
+    }
+    .arch-box:nth-child(2){background:rgba(220,236,255,.62)}
+    .arch-box:nth-child(3){background:rgba(223,244,234,.7)}
+    .arch-box:nth-child(4){background:rgba(255,240,201,.72)}
+    .arch-box:nth-child(5){background:rgba(255,231,223,.7)}
+
+    .rubric{
+      display:grid;
+      gap:12px;
+    }
+    .rubric-row{
+      display:grid;
+      grid-template-columns:150px minmax(0,1fr) 82px;
+      gap:14px;
+      align-items:center;
+      padding:14px;
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:rgba(255,255,255,.48);
+    }
+    .bar{
+      height:10px;
+      overflow:hidden;
+      border-radius:999px;
+      background:rgba(23,34,31,.1);
+    }
+    .bar span{
+      display:block;
+      height:100%;
+      width:var(--value);
+      border-radius:inherit;
+      background:linear-gradient(90deg,var(--green),var(--amber));
+    }
+
+    .risk-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:14px;
+    }
+    .risk-card{
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:18px;
+      background:rgba(255,255,255,.56);
+    }
+    .risk-top{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:flex-start;
+      margin-bottom:10px;
+    }
+    .risk-top b{
+      font:900 17px/1.2 var(--font-display);
+      letter-spacing:-.02em;
+    }
+    .level{
+      flex-shrink:0;
+      border-radius:999px;
+      padding:5px 9px;
+      font-size:11px;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+    }
+    .level.high{color:#8d201d;background:#ffe1dc}
+    .level.mid{color:#725005;background:#fff0c9}
+    .level.low{color:#1d5c4a;background:#dff4ea}
+    .risk-card p{
+      margin:0 0 10px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.62;
+    }
+    .risk-card .mitigation{
+      margin-top:12px;
+      padding-top:12px;
+      border-top:1px solid var(--line);
+      color:var(--ink);
+      font-size:13px;
+      line-height:1.58;
+    }
+
+    .timeline{
+      display:grid;
+      gap:16px;
+    }
+    .month{
+      display:grid;
+      grid-template-columns:220px minmax(0,1fr);
+      gap:16px;
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:16px;
+      background:rgba(255,250,240,.74);
+      box-shadow:var(--small-shadow);
+    }
+    .month-title{
+      border-radius:20px;
+      padding:18px;
+      color:#fff;
+      background:
+        radial-gradient(circle at 15% 10%,rgba(255,255,255,.22),transparent 8rem),
+        linear-gradient(135deg,var(--green),#17395c);
+    }
+    .month-title span{
+      display:block;
+      opacity:.78;
+      font-size:12px;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      margin-bottom:8px;
+    }
+    .month-title b{
+      display:block;
+      font:900 24px/1.05 var(--font-display);
+      letter-spacing:-.04em;
+    }
+    .sprints{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:10px;
+    }
+    .sprint{
+      border-radius:18px;
+      padding:14px;
+      background:rgba(255,255,255,.55);
+      border:1px solid rgba(23,34,31,.1);
+    }
+    .sprint b{
+      display:block;
+      margin-bottom:6px;
+      font-size:14px;
+      color:var(--green);
+    }
+    .sprint span{
+      display:block;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.55;
+    }
+
+    .qa-list{display:grid;gap:12px}
+    .qa-item{
+      overflow:hidden;
+      border:1px solid var(--line);
+      border-radius:20px;
+      background:rgba(255,250,240,.74);
+      box-shadow:0 10px 24px rgba(23,34,31,.06);
+    }
+    .qa-q{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      width:100%;
+      border:0;
+      padding:17px 18px;
+      background:transparent;
+      color:var(--ink);
+      font:900 15px var(--font-body);
+      text-align:left;
+      cursor:pointer;
+    }
+    .qa-q span:last-child{
+      display:grid;
+      place-items:center;
+      width:30px;
+      height:30px;
+      border-radius:50%;
+      color:var(--green);
+      background:var(--mint);
+      transition:.2s ease;
+    }
+    .qa-item.open .qa-q span:last-child{transform:rotate(45deg)}
+    .qa-a{
+      display:none;
+      padding:0 18px 18px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.72;
+    }
+    .qa-item.open .qa-a{display:block}
+    .qa-a strong{color:var(--ink)}
+
+    .comparison{
+      width:100%;
+      overflow:hidden;
+      border-collapse:separate;
+      border-spacing:0;
+      border:1px solid var(--line);
+      border-radius:22px;
+      background:rgba(255,250,240,.78);
+      box-shadow:var(--small-shadow);
+    }
+    .comparison th,
+    .comparison td{
+      padding:16px;
+      border-bottom:1px solid var(--line);
+      text-align:left;
+      vertical-align:top;
+      font-size:14px;
+      line-height:1.58;
+    }
+    .comparison th{
+      color:#fff;
+      background:var(--green);
+      font:900 14px var(--font-body);
+    }
+    .comparison tr:last-child td{border-bottom:0}
+    .comparison td:first-child{
+      width:24%;
+      color:var(--ink);
+      font-weight:900;
+    }
+
+    .footer-note{
+      margin-top:24px;
+      border:1px solid rgba(29,92,74,.18);
+      border-radius:24px;
+      padding:20px;
+      color:var(--muted);
+      background:rgba(223,244,234,.58);
+      line-height:1.68;
+    }
+    .footer-note strong{color:var(--green)}
+
+    @media (max-width:980px){
+      .hero-grid,.matrix,.grid-2,.month{grid-template-columns:1fr}
+      .metrics,.grid-3,.risk-grid{grid-template-columns:repeat(2,1fr)}
+      .architecture{grid-template-columns:repeat(2,1fr)}
+      .nav{grid-template-columns:repeat(3,1fr)}
+      .section-head{display:block}
+      .section-note{margin-top:10px}
+    }
+    @media (max-width:680px){
+      .page{width:min(100% - 20px,1180px);padding-top:14px}
+      .hero{padding:22px;border-radius:24px}
+      .hero-panel{padding:16px}
+      .metrics,.grid-3,.risk-grid,.architecture,.sprints{grid-template-columns:1fr}
+      .nav-wrap{border-radius:24px;position:static}
+      .nav{grid-template-columns:1fr 1fr}
+      .tab-btn{white-space:normal}
+      .rubric-row{grid-template-columns:1fr}
+      .comparison{display:block;overflow-x:auto}
+      .card{padding:18px}
+    }
+
+    /* OmniBiz visual sync */
+    :root{
+      --bg:#07111f;
+      --surface:#0d1b2e;
+      --surface2:#10243d;
+      --card:#132b48;
+      --border:#21415f;
+      --text:#eaf4ff;
+      --muted:#9db3c9;
+      --dim:#6f879d;
+      --blue-accent:#38bdf8;
+      --violet:#a78bfa;
+      --green-accent:#34d399;
+      --orange:#fb923c;
+      --red:#f87171;
+      --yellow:#facc15;
+      --ink:var(--text);
+      --paper:var(--surface);
+      --line:rgba(255,255,255,.09);
+      --green:var(--blue-accent);
+      --mint:rgba(56,189,248,.09);
+      --amber:var(--green-accent);
+      --clay:var(--violet);
+      --navy:var(--blue-accent);
+      --blue:rgba(56,189,248,.09);
+      --rose:rgba(248,113,113,.09);
+      --shadow:0 24px 80px rgba(0,0,0,.35);
+      --small-shadow:0 14px 45px rgba(0,0,0,.18);
+      --font-display:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      --font-body:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+    *{margin:0;padding:0}
+    body{
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:var(--text);
+      line-height:1.65;
+      background:
+        radial-gradient(circle at 15% 0%, rgba(56,189,248,.16), transparent 34%),
+        radial-gradient(circle at 90% 10%, rgba(167,139,250,.13), transparent 30%),
+        radial-gradient(circle at 50% 100%, rgba(52,211,153,.08), transparent 35%),
+        var(--bg);
+    }
+    body::before{display:none}
+    .noise{
+      position:fixed;inset:0;pointer-events:none;z-index:99;opacity:.055;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E");
+    }
+    .top-nav{
+      position:sticky;top:0;z-index:50;
+      backdrop-filter:blur(18px);
+      background:rgba(7,17,31,.76);
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    .top-nav-inner{
+      width:min(1180px,92vw);
+      height:72px;
+      margin:0 auto;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      color:var(--text);
+      text-decoration:none;
+      font-weight:900;
+      letter-spacing:-.03em;
+    }
+    .logo{
+      width:42px;height:42px;border-radius:14px;
+      background:linear-gradient(135deg,var(--blue-accent),var(--violet));
+      display:grid;place-items:center;color:#03101f;font-weight:900;box-shadow:0 12px 30px rgba(56,189,248,.22)
+    }
+    .top-links{display:flex;gap:18px;flex-wrap:wrap}
+    .top-links a{
+      color:var(--muted);text-decoration:none;font-size:13px;font-weight:700;
+    }
+    .top-links a:hover,
+    .top-links a[aria-current="page"]{color:var(--blue-accent)}
+    .page{width:min(1180px,92vw);padding:48px 0 56px}
+    .hero{
+      padding:28px 0 34px;
+      border:0;
+      border-radius:0;
+      background:transparent;
+      box-shadow:none;
+      overflow:visible;
+    }
+    .hero::after{display:none}
+    .hero-grid{grid-template-columns:1.15fr .85fr;gap:34px;align-items:center}
+    .eyebrow{
+      color:var(--blue-accent);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.18em;
+      padding:8px 12px;border:1px solid rgba(56,189,248,.24);border-radius:999px;background:rgba(56,189,248,.07)
+    }
+    .eyebrow::before{display:none}
+    h1{
+      font-size:clamp(42px,7vw,86px);line-height:.98;letter-spacing:-.07em;
+      margin:18px 0 22px;font-weight:900;max-width:900px;
+      background:linear-gradient(90deg,var(--blue-accent),var(--violet),var(--green-accent));
+      -webkit-background-clip:text;background-clip:text;color:transparent;
+    }
+    .hero-copy{font-size:18px;color:var(--muted);max-width:720px}
+    .hero-copy strong{color:var(--text)}
+    .btn{
+      padding:13px 18px;border-radius:14px;text-decoration:none;font-weight:800;font-size:14px;
+      border:1px solid rgba(255,255,255,.1);display:inline-flex;align-items:center;gap:8px;
+      background:linear-gradient(135deg,var(--blue-accent),var(--violet));color:#06101d;box-shadow:none;
+    }
+    .btn.secondary{
+      color:var(--text);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+    }
+    .hero-panel{
+      background:linear-gradient(145deg,rgba(19,43,72,.92),rgba(13,27,46,.92));
+      border:1px solid rgba(255,255,255,.1);border-radius:28px;padding:26px;box-shadow:var(--shadow);
+      position:relative;overflow:hidden;
+    }
+    .hero-panel::before{
+      content:"";position:absolute;inset:-120px -80px auto auto;width:260px;height:260px;border-radius:50%;
+      background:radial-gradient(circle,rgba(56,189,248,.22),transparent 70%);filter:blur(12px)
+    }
+    .panel-title,.verdict,.score-ring{position:relative}
+    .panel-title{font-size:18px;color:var(--text)}
+    .score-ring{background:conic-gradient(var(--blue-accent) 0 86%, rgba(255,255,255,.08) 86% 100%)}
+    .score-ring::before{background:var(--surface)}
+    .score b{color:var(--text)}
+    .score span,.verdict{color:var(--muted)}
+    .verdict strong{color:var(--green-accent)}
+    .metric{
+      background:linear-gradient(145deg,rgba(19,43,72,.86),rgba(13,27,46,.88));
+      border:1px solid rgba(255,255,255,.09);
+      box-shadow:0 14px 45px rgba(0,0,0,.18);
+    }
+    .metric b{color:var(--text)}
+    .metric span{color:var(--muted)}
+    .nav-wrap{
+      top:84px;
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:22px;
+      background:rgba(13,27,46,.86);
+      box-shadow:0 14px 45px rgba(0,0,0,.18);
+    }
+    .tab-btn{color:var(--muted)}
+    .tab-btn:hover{background:rgba(56,189,248,.09);color:var(--blue-accent)}
+    .tab-btn.on{color:#06101d;background:linear-gradient(135deg,var(--blue-accent),var(--violet));box-shadow:0 12px 30px rgba(56,189,248,.18)}
+    .kicker{color:var(--blue-accent)}
+    h2{color:var(--text)}
+    .section-note,.card p,.card li,.flow-step p,.arch-box span,.risk-card p,.sprint span,.qa-a,.comparison td,.footer-note{color:var(--muted)}
+    .card,.risk-card,.qa-item,.month,.comparison{
+      background:linear-gradient(145deg,rgba(19,43,72,.86),rgba(13,27,46,.88));
+      border:1px solid rgba(255,255,255,.09);
+      box-shadow:0 14px 45px rgba(0,0,0,.18);
+    }
+    .card.dark{
+      background:linear-gradient(145deg,rgba(56,189,248,.14),rgba(167,139,250,.1)),linear-gradient(145deg,rgba(19,43,72,.9),rgba(13,27,46,.92));
+      border-color:rgba(56,189,248,.2);
+    }
+    .card h3,.flow-step h3,.arch-box strong,.risk-top b,.sprint b,.qa-q{color:var(--text)}
+    .tag{
+      background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:var(--muted)
+    }
+    .tag.blue{color:var(--blue-accent);background:rgba(56,189,248,.09);border-color:rgba(56,189,248,.23)}
+    .tag.amber{color:var(--orange);background:rgba(251,146,60,.09);border-color:rgba(251,146,60,.23)}
+    .tag.rose{color:var(--red);background:rgba(248,113,113,.09);border-color:rgba(248,113,113,.23)}
+    .flow-step,.arch-box,.rubric-row,.sprint{
+      background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08);
+    }
+    .num{
+      color:#06101d;background:linear-gradient(135deg,var(--blue-accent),var(--violet));box-shadow:0 12px 30px rgba(56,189,248,.18)
+    }
+    code{color:var(--green-accent);background:rgba(52,211,153,.1)}
+    .bar{background:rgba(255,255,255,.09)}
+    .bar span{background:linear-gradient(90deg,var(--blue-accent),var(--violet),var(--green-accent))}
+    .level.high{color:var(--red);background:rgba(248,113,113,.09);border:1px solid rgba(248,113,113,.23)}
+    .level.mid{color:var(--orange);background:rgba(251,146,60,.09);border:1px solid rgba(251,146,60,.23)}
+    .level.low{color:var(--green-accent);background:rgba(52,211,153,.09);border:1px solid rgba(52,211,153,.23)}
+    .month-title{
+      background:linear-gradient(135deg,rgba(56,189,248,.22),rgba(167,139,250,.18));
+      border:1px solid rgba(56,189,248,.24);
+    }
+    .qa-q span:last-child{color:#06101d;background:linear-gradient(135deg,var(--blue-accent),var(--violet))}
+    .comparison th{color:var(--blue-accent);background:rgba(56,189,248,.055)}
+    .comparison td:first-child,.qa-a strong,.footer-note strong{color:var(--text)}
+    .footer-note{
+      border:1px solid rgba(56,189,248,.18);
+      background:rgba(56,189,248,.06);
+    }
+    @media(max-width:920px){
+      .top-links{display:none}
+      .nav-wrap{top:0}
+    }
+    @media(max-width:680px){
+      .page{width:min(100% - 20px,1180px);padding-top:24px}
+      .hero{padding:18px 0 28px}
+    }
+  </style>
+</head>
+<body>
+  <div class="noise"></div>
+  <nav class="top-nav">
+    <div class="top-nav-inner">
+      <a class="brand" href="index.html"><div class="logo">AI</div><div>DATN AI Hub</div></a>
+      <div class="top-links">
+        <a href="index.html">Trang tổng</a>
+        <a href="omnibiz-ai-de-tai-tot-nghiep.html">OmniBiz AI</a>
+        <a href="meeting-ai-analysis.html" aria-current="page">Meeting AI</a>
+      </div>
+    </div>
+  </nav>
+  <main class="page">
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <div class="eyebrow">Đề tài tốt nghiệp ngành Công nghệ thông tin</div>
+          <h1>Meeting AI Analysis</h1>
+          <p class="hero-copy">
+            Nền tảng <strong>phân tích cuộc họp bằng AI</strong>: chuyển giọng nói thành văn bản, tóm tắt nội dung,
+            trích xuất quyết định, sinh action items, tìm kiếm ngữ nghĩa và theo dõi việc cần làm sau cuộc họp.
+            Trang này dùng như bản phân tích chuyên sâu để đưa vào báo cáo hoặc chuẩn bị bảo vệ.
+          </p>
+          <div class="hero-actions">
+            <button class="btn" onclick="tab(1)">Xem kiến trúc hệ thống</button>
+            <button class="btn secondary" onclick="tab(5)">Chuẩn bị Q&A bảo vệ</button>
+          </div>
+        </div>
+        <aside class="hero-panel">
+          <p class="panel-title">Đánh giá khả thi tổng quan</p>
+          <div class="score-ring">
+            <div class="score">
+              <b>86</b>
+              <span>/100</span>
+            </div>
+          </div>
+          <p class="verdict">
+            <strong>Khả thi nếu giữ MVP gọn:</strong> upload audio, transcript, summary, action items, task board và semantic search.
+            Tích hợp realtime Meet/Zoom nên để giai đoạn mở rộng để giảm rủi ro trong 3 tháng.
+          </p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="metrics" aria-label="Chỉ số đề tài">
+      <div class="metric">
+        <b>5</b>
+        <span>module lõi: upload, AI pipeline, transcript, task, search</span>
+      </div>
+      <div class="metric">
+        <b>12</b>
+        <span>sprint một tuần, phù hợp nhóm 5-7 sinh viên</span>
+      </div>
+      <div class="metric">
+        <b>20+</b>
+        <span>cuộc họp mẫu nên dùng để đánh giá transcript và action items</span>
+      </div>
+      <div class="metric">
+        <b>3</b>
+        <span>tiêu chí bảo vệ chính: kỹ thuật, thực tiễn, đo lường</span>
+      </div>
+    </section>
+
+    <div class="nav-wrap">
+      <nav class="nav" aria-label="Điều hướng nội dung phân tích">
+        <button class="tab-btn on" onclick="tab(0)">Tổng quan</button>
+        <button class="tab-btn" onclick="tab(1)">Kiến trúc</button>
+        <button class="tab-btn" onclick="tab(2)">Pipeline AI</button>
+        <button class="tab-btn" onclick="tab(3)">Đánh giá</button>
+        <button class="tab-btn" onclick="tab(4)">Roadmap</button>
+        <button class="tab-btn" onclick="tab(5)">Bảo vệ</button>
+      </nav>
+    </div>
+
+    <section class="pane on" id="pane0">
+      <div class="section-head">
+        <div>
+          <p class="kicker">01. Bản chất đề tài</p>
+          <h2>Không chỉ là transcript, mà là hệ thống biến cuộc họp thành công việc có thể theo dõi.</h2>
+        </div>
+        <p class="section-note">
+          Điểm mạnh khi bảo vệ là trình bày đề tài như một pipeline xử lý thông tin hoàn chỉnh,
+          không phải một trang gọi API AI đơn giản.
+        </p>
+      </div>
+
+      <div class="grid-3">
+        <article class="card dark">
+          <h3>Vấn đề thực tế</h3>
+          <p>
+            Sau cuộc họp, nhiều nhóm mất thông tin quan trọng: ai phải làm gì, deadline nào, quyết định nào đã được chốt.
+            Biên bản thủ công tốn thời gian, không đồng nhất và khó tìm lại khi dự án kéo dài.
+          </p>
+          <div class="tag-row">
+            <span class="tag amber">Pain point rõ</span>
+            <span class="tag blue">Có người dùng thật</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Mục tiêu nghiên cứu</h3>
+          <ul>
+            <li>Tự động chuyển audio cuộc họp tiếng Việt/Anh thành transcript có timestamp.</li>
+            <li>Tóm tắt nội dung, trích xuất quyết định và action items có căn cứ từ transcript.</li>
+            <li>Quản lý action items như task: người phụ trách, hạn xử lý, trạng thái.</li>
+            <li>Cho phép tìm kiếm ngữ nghĩa trên toàn bộ nội dung cuộc họp.</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h3>Phạm vi MVP hợp lý</h3>
+          <ul>
+            <li>Nhận file audio/video sau cuộc họp thay vì tham gia meeting realtime.</li>
+            <li>Ưu tiên cuộc họp 5-60 phút để demo ổn định.</li>
+            <li>Human-in-the-loop: người dùng xác nhận action items trước khi lưu thành task.</li>
+            <li>Không cam kết thay thế thư ký; hệ thống đóng vai trò trợ lý phân tích.</li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="section-head">
+        <div>
+          <p class="kicker">02. Giá trị khoa học và ứng dụng</p>
+          <h2>Đề tài đủ chiều sâu nếu có mô hình, đo lường và dữ liệu thử nghiệm.</h2>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <article class="card">
+          <h3>Giá trị khoa học</h3>
+          <p>
+            Đề tài kết hợp Speech-to-Text, NLP, LLM structured extraction, vector embedding và information retrieval.
+            Phần nghiên cứu không nằm ở việc huấn luyện mô hình mới, mà ở thiết kế pipeline đáng tin cậy,
+            kiểm soát hallucination và đánh giá chất lượng đầu ra trên dữ liệu cuộc họp thực tế.
+          </p>
+          <div class="tag-row">
+            <span class="tag">ASR</span>
+            <span class="tag">LLM</span>
+            <span class="tag">RAG</span>
+            <span class="tag">Vector Search</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Giá trị ứng dụng</h3>
+          <p>
+            Sản phẩm phù hợp nhóm dự án, lớp học, startup, phòng ban nội bộ và nhóm làm việc online.
+            Nếu triển khai tốt, hệ thống giúp giảm thời gian viết biên bản, tăng khả năng truy vết quyết định
+            và làm rõ trách nhiệm sau mỗi cuộc họp.
+          </p>
+          <div class="tag-row">
+            <span class="tag blue">Productivity</span>
+            <span class="tag amber">Teamwork</span>
+            <span class="tag rose">Knowledge base</span>
+          </div>
+        </article>
+      </div>
+
+      <div class="footer-note">
+        <strong>Luận điểm bảo vệ nên dùng:</strong> đề tài có tính mới ở cấp ứng dụng vì tích hợp nhiều kỹ thuật AI thành một quy trình nghiệp vụ khép kín:
+        từ audio đầu vào đến tri thức có cấu trúc, có kiểm chứng và có thể chuyển thành công việc.
+      </div>
+    </section>
+
+    <section class="pane" id="pane1">
+      <div class="section-head">
+        <div>
+          <p class="kicker">Kiến trúc hệ thống</p>
+          <h2>Thiết kế module rõ ràng để dễ chia việc, dễ demo và dễ bảo vệ.</h2>
+        </div>
+        <p class="section-note">
+          Kiến trúc tốt nghiệp nên ưu tiên tính giải thích được: mỗi module có input, output, trách nhiệm và dữ liệu lưu trữ rõ ràng.
+        </p>
+      </div>
+
+      <div class="architecture">
+        <div class="arch-box">
+          <strong>Frontend</strong>
+          <span>Dashboard, upload meeting, transcript viewer, summary panel, task board, semantic search, export biên bản.</span>
+        </div>
+        <div class="arch-box">
+          <strong>Backend API</strong>
+          <span>Auth, workspace, meeting CRUD, file metadata, job status, task management, notification và phân quyền.</span>
+        </div>
+        <div class="arch-box">
+          <strong>AI Worker</strong>
+          <span>Preprocess audio, gọi Whisper, hậu xử lý transcript, gọi LLM tóm tắt, sinh embedding và kiểm tra schema.</span>
+        </div>
+        <div class="arch-box">
+          <strong>Data Layer</strong>
+          <span>PostgreSQL cho nghiệp vụ, pgvector cho search, object storage cho audio, Redis cho queue/cache.</span>
+        </div>
+        <div class="arch-box">
+          <strong>Observability</strong>
+          <span>Log job processing, thời gian xử lý, lỗi API, chi phí token, audit log truy cập transcript.</span>
+        </div>
+      </div>
+
+      <div class="section-head">
+        <div>
+          <p class="kicker">Luồng nghiệp vụ</p>
+          <h2>End-to-end flow từ file cuộc họp đến action items.</h2>
+        </div>
+      </div>
+
+      <div class="matrix">
+        <div class="card">
+          <div class="flow">
+            <div class="flow-step">
+              <div class="num">1</div>
+              <div>
+                <h3>Upload meeting</h3>
+                <p>Người dùng tạo meeting record, upload MP3/M4A/WAV, backend lưu metadata và đưa job vào queue.</p>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="num">2</div>
+              <div>
+                <h3>AI processing</h3>
+                <p>Worker chuẩn hóa audio, transcribe, post-process, tóm tắt, trích xuất action items theo JSON schema.</p>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="num">3</div>
+              <div>
+                <h3>Review and confirm</h3>
+                <p>Người dùng kiểm tra transcript, sửa tên riêng, xác nhận action items trước khi chuyển thành task.</p>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="num">4</div>
+              <div>
+                <h3>Search and follow-up</h3>
+                <p>Người dùng tìm lại quyết định, nghe lại timestamp gốc, theo dõi task và xuất biên bản PDF.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card dark">
+          <h3>Đề xuất tech stack</h3>
+          <ul>
+            <li><b>Frontend:</b> Next.js hoặc React, UI component tự viết, chart cho dashboard.</li>
+            <li><b>Backend:</b> NestJS/FastAPI, REST API, OpenAPI spec để FE/BE làm song song.</li>
+            <li><b>Database:</b> PostgreSQL, pgvector, Redis queue, S3/MinIO object storage.</li>
+            <li><b>AI:</b> Whisper large-v3 cho ASR, LLM có structured output, embedding model cho semantic search.</li>
+            <li><b>Deploy:</b> Docker Compose cho dev, Vercel/Fly/Railway/Supabase cho demo production.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-head">
+        <div>
+          <p class="kicker">Database gợi ý</p>
+          <h2>Schema nên đủ để chứng minh sản phẩm có nghiệp vụ thật.</h2>
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <article class="card">
+          <h3>Nhóm bảng người dùng</h3>
+          <p><code>users</code>, <code>workspaces</code>, <code>workspace_members</code>, <code>roles</code>. Phục vụ đăng nhập, phân quyền và quản lý nhóm.</p>
+        </article>
+        <article class="card">
+          <h3>Nhóm bảng cuộc họp</h3>
+          <p><code>meetings</code>, <code>meeting_files</code>, <code>transcript_segments</code>, <code>meeting_summaries</code>. Phục vụ truy vết audio, timestamp và kết quả AI.</p>
+        </article>
+        <article class="card">
+          <h3>Nhóm bảng công việc</h3>
+          <p><code>action_items</code>, <code>tasks</code>, <code>task_comments</code>, <code>notifications</code>. Biến insight từ cuộc họp thành công việc có vòng đời.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="pane" id="pane2">
+      <div class="section-head">
+        <div>
+          <p class="kicker">Pipeline AI</p>
+          <h2>Điểm ăn điểm của đề tài nằm ở kiểm soát chất lượng đầu ra AI.</h2>
+        </div>
+        <p class="section-note">
+          Hội đồng thường hỏi “AI có bịa không?”. Câu trả lời tốt nhất là thiết kế grounding, schema validation, citation và human review.
+        </p>
+      </div>
+
+      <div class="grid-2">
+        <article class="card">
+          <h3>Pipeline xử lý đề xuất</h3>
+          <div class="flow">
+            <div class="flow-step">
+              <div class="num">A</div>
+              <div>
+                <h3>Audio preprocessing</h3>
+                <p>Convert về <code>16kHz mono</code>, giảm nhiễu cơ bản, chia chunk 5-10 phút để tránh timeout.</p>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="num">B</div>
+              <div>
+                <h3>Speech-to-text</h3>
+                <p>Whisper trả về transcript và segment timestamp. Lưu transcript thô để đối chiếu khi cần.</p>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="num">C</div>
+              <div>
+                <h3>Transcript cleanup</h3>
+                <p>LLM chỉ sửa dấu câu, tên riêng, thuật ngữ; không được thay đổi ý nghĩa gốc.</p>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="num">D</div>
+              <div>
+                <h3>Structured extraction</h3>
+                <p>Sinh <code>summary</code>, <code>decisions</code>, <code>risks</code>, <code>action_items</code> theo schema cố định.</p>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="num">E</div>
+              <div>
+                <h3>Embedding and RAG</h3>
+                <p>Chia transcript thành chunk, embed, lưu pgvector. Khi hỏi đáp, trả lời kèm timestamp nguồn.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card dark">
+          <h3>Prompt contract cần có</h3>
+          <ul>
+            <li>Chỉ sử dụng thông tin có trong transcript, không suy diễn từ kiến thức bên ngoài.</li>
+            <li>Nếu không có bằng chứng rõ ràng cho action item, không tạo action item.</li>
+            <li>Mỗi action item phải có nội dung, người phụ trách gợi ý, deadline gợi ý và timestamp nguồn.</li>
+            <li>Đầu ra phải là JSON hợp lệ, backend validate bằng schema trước khi lưu.</li>
+            <li>Khi model không chắc chắn, trả về <code>confidence</code> thấp để giao diện yêu cầu người dùng xác nhận.</li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="section-head">
+        <div>
+          <p class="kicker">So sánh giải pháp</p>
+          <h2>Nên đặt sản phẩm của nhóm cạnh các công cụ có sẵn.</h2>
+        </div>
+      </div>
+
+      <table class="comparison">
+        <thead>
+          <tr>
+            <th>Tiêu chí</th>
+            <th>Công cụ transcript thông thường</th>
+            <th>Meeting AI Analysis</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Đầu ra</td>
+            <td>Văn bản thô, người dùng tự đọc lại và tự ghi việc cần làm.</td>
+            <td>Transcript, tóm tắt, quyết định, action items, task và tìm kiếm ngữ nghĩa.</td>
+          </tr>
+          <tr>
+            <td>Khả năng kiểm chứng</td>
+            <td>Ít hoặc không có liên kết trực tiếp tới đoạn audio nguồn.</td>
+            <td>Mỗi insight quan trọng liên kết về timestamp để nghe lại và xác nhận.</td>
+          </tr>
+          <tr>
+            <td>Quản lý sau họp</td>
+            <td>Dừng ở ghi chép, không theo dõi tiến độ công việc.</td>
+            <td>Action item chuyển thành task có assignee, due date, status và notification.</td>
+          </tr>
+          <tr>
+            <td>Tính nghiên cứu</td>
+            <td>Chủ yếu là gọi API speech-to-text.</td>
+            <td>Có pipeline AI nhiều bước, đánh giá WER, precision/recall và kiểm soát hallucination.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="pane" id="pane3">
+      <div class="section-head">
+        <div>
+          <p class="kicker">Đánh giá và thực nghiệm</p>
+          <h2>Phần đo lường giúp báo cáo khác biệt với một sản phẩm demo thông thường.</h2>
+        </div>
+        <p class="section-note">
+          Nên chuẩn bị bộ dữ liệu nhỏ nhưng thật: 20 cuộc họp hoặc đoạn họp, có người nghe thủ công để tạo ground truth.
+        </p>
+      </div>
+
+      <div class="grid-2">
+        <article class="card">
+          <h3>Bộ tiêu chí đề xuất</h3>
+          <div class="rubric">
+            <div class="rubric-row">
+              <strong>WER transcript</strong>
+              <div class="bar" style="--value:72%"><span></span></div>
+              <span>&lt; 18%</span>
+            </div>
+            <div class="rubric-row">
+              <strong>Action precision</strong>
+              <div class="bar" style="--value:82%"><span></span></div>
+              <span>&gt; 80%</span>
+            </div>
+            <div class="rubric-row">
+              <strong>Action recall</strong>
+              <div class="bar" style="--value:70%"><span></span></div>
+              <span>&gt; 70%</span>
+            </div>
+            <div class="rubric-row">
+              <strong>Search hit rate</strong>
+              <div class="bar" style="--value:78%"><span></span></div>
+              <span>&gt; 75%</span>
+            </div>
+            <div class="rubric-row">
+              <strong>Processing time</strong>
+              <div class="bar" style="--value:86%"><span></span></div>
+              <span>&lt; 3 phút</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Cách làm thực nghiệm</h3>
+          <ul>
+            <li>Thu 20 mẫu audio: họp nhóm đồ án, họp lớp, họp online, giọng Bắc/Trung/Nam, có cả nhiễu nhẹ.</li>
+            <li>Tạo ground truth bằng cách nghe thủ công và ghi transcript/action items chuẩn.</li>
+            <li>So sánh transcript AI với ground truth để tính WER hoặc CER cho tiếng Việt.</li>
+            <li>Đánh giá action items bằng precision/recall: đúng nội dung, đúng người, đúng deadline nếu có.</li>
+            <li>Khảo sát người dùng bằng SUS hoặc thang Likert 1-5 về tính hữu ích, dễ dùng và độ tin cậy.</li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="section-head">
+        <div>
+          <p class="kicker">Ma trận rủi ro</p>
+          <h2>Rủi ro cần nói trước, không né tránh.</h2>
+        </div>
+      </div>
+
+      <div class="risk-grid">
+        <article class="risk-card">
+          <div class="risk-top">
+            <b>Độ chính xác tiếng Việt</b>
+            <span class="level high">Cao</span>
+          </div>
+          <p>Giọng vùng miền, nói chồng, tiếng ồn và thuật ngữ chuyên ngành làm transcript sai.</p>
+          <div class="mitigation"><strong>Giảm thiểu:</strong> audio chuẩn hóa, cho sửa transcript, lưu timestamp, đánh giá trên dữ liệu thực.</div>
+        </article>
+
+        <article class="risk-card">
+          <div class="risk-top">
+            <b>LLM hallucination</b>
+            <span class="level high">Cao</span>
+          </div>
+          <p>Model có thể sinh action item không tồn tại hoặc suy luận deadline không có trong transcript.</p>
+          <div class="mitigation"><strong>Giảm thiểu:</strong> schema, grounding, citation, confidence score và người dùng xác nhận.</div>
+        </article>
+
+        <article class="risk-card">
+          <div class="risk-top">
+            <b>Chi phí API</b>
+            <span class="level mid">TB</span>
+          </div>
+          <p>Cuộc họp dài tạo nhiều token, chi phí tăng khi nhiều người dùng upload liên tục.</p>
+          <div class="mitigation"><strong>Giảm thiểu:</strong> giới hạn dung lượng, chunking, cache kết quả, dùng model nhỏ cho tác vụ đơn giản.</div>
+        </article>
+
+        <article class="risk-card">
+          <div class="risk-top">
+            <b>Bảo mật dữ liệu</b>
+            <span class="level high">Cao</span>
+          </div>
+          <p>Audio cuộc họp có thể chứa thông tin nội bộ, email, số điện thoại hoặc dữ liệu nhạy cảm.</p>
+          <div class="mitigation"><strong>Giảm thiểu:</strong> RBAC, mã hóa storage, signed URL, audit log, xóa file theo policy.</div>
+        </article>
+
+        <article class="risk-card">
+          <div class="risk-top">
+            <b>File lớn và timeout</b>
+            <span class="level mid">TB</span>
+          </div>
+          <p>Audio 1-2 giờ có thể upload chậm, worker chạy lâu và request HTTP bị timeout.</p>
+          <div class="mitigation"><strong>Giảm thiểu:</strong> queue async, polling/SSE job status, upload trực tiếp object storage.</div>
+        </article>
+
+        <article class="risk-card">
+          <div class="risk-top">
+            <b>Scope creep</b>
+            <span class="level low">Thấp</span>
+          </div>
+          <p>Nhóm dễ bị cuốn vào realtime bot, diarization, calendar integration, mobile app.</p>
+          <div class="mitigation"><strong>Giảm thiểu:</strong> khóa MVP, đưa tính năng nâng cao vào future work.</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="pane" id="pane4">
+      <div class="section-head">
+        <div>
+          <p class="kicker">Kế hoạch 3 tháng</p>
+          <h2>Roadmap nên chứng minh nhóm biết quản trị rủi ro và có milestone demo rõ.</h2>
+        </div>
+        <p class="section-note">
+          Nếu nhóm có 5-7 người, chia theo vai trò: FE, BE, AI, QA/BA, DevOps/PM. Mỗi tháng phải có sản phẩm chạy được.
+        </p>
+      </div>
+
+      <div class="timeline">
+        <div class="month">
+          <div class="month-title">
+            <span>Tháng 1</span>
+            <b>Nền móng và core AI</b>
+          </div>
+          <div class="sprints">
+            <div class="sprint">
+              <b>Sprint 1</b>
+              <span>Khảo sát người dùng, chốt use case, thiết kế DB, setup repo, CI và môi trường Docker.</span>
+            </div>
+            <div class="sprint">
+              <b>Sprint 2</b>
+              <span>Auth, upload API, object storage, queue async, spike Whisper với audio tiếng Việt.</span>
+            </div>
+            <div class="sprint">
+              <b>Sprint 3</b>
+              <span>Transcript viewer, LLM summary, JSON schema cho decisions và action items.</span>
+            </div>
+            <div class="sprint">
+              <b>Sprint 4</b>
+              <span>Task board, semantic search bản đầu, benchmark WER trên 10 mẫu audio.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="month">
+          <div class="month-title">
+            <span>Tháng 2</span>
+            <b>Dashboard và trải nghiệm người dùng</b>
+          </div>
+          <div class="sprints">
+            <div class="sprint">
+              <b>Sprint 5</b>
+              <span>Dashboard cuộc họp, filter theo ngày/người, biểu đồ task và trạng thái xử lý job.</span>
+            </div>
+            <div class="sprint">
+              <b>Sprint 6</b>
+              <span>Search UI, highlight kết quả, notification sau khi xử lý xong và reminder task.</span>
+            </div>
+            <div class="sprint">
+              <b>Sprint 7</b>
+              <span>Audio player đồng bộ timestamp, export biên bản PDF, user testing vòng 1.</span>
+            </div>
+            <div class="sprint">
+              <b>Sprint 8</b>
+              <span>Deploy production demo, monitoring lỗi, sửa bug từ feedback người dùng.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="month">
+          <div class="month-title">
+            <span>Tháng 3</span>
+            <b>Đánh giá, báo cáo và bảo vệ</b>
+          </div>
+          <div class="sprints">
+            <div class="sprint">
+              <b>Sprint 9</b>
+              <span>Security hardening, RBAC, audit log, responsive, accessibility và regression test.</span>
+            </div>
+            <div class="sprint">
+              <b>Sprint 10</b>
+              <span>Đo precision/recall action items, search hit rate, processing time và load test nhẹ.</span>
+            </div>
+            <div class="sprint">
+              <b>Sprint 11</b>
+              <span>Viết báo cáo: đặt vấn đề, kiến trúc, thiết kế DB, thực nghiệm, kết quả và hạn chế.</span>
+            </div>
+            <div class="sprint">
+              <b>Sprint 12</b>
+              <span>Chuẩn bị slide, kịch bản demo 10 phút, video backup và rehearsal Q&A.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-note">
+        <strong>Milestone tối thiểu để được xem là hoàn thành:</strong> một người dùng upload audio, hệ thống xử lý async,
+        sinh transcript/tóm tắt/action items, người dùng xác nhận task, tìm kiếm lại nội dung và xuất biên bản.
+      </div>
+    </section>
+
+    <section class="pane" id="pane5">
+      <div class="section-head">
+        <div>
+          <p class="kicker">Chuẩn bị bảo vệ</p>
+          <h2>Câu trả lời nên đi thẳng vào thiết kế, số liệu và giới hạn đề tài.</h2>
+        </div>
+        <p class="section-note">
+          Bấm từng câu để xem hướng trả lời. Khi bảo vệ, tránh nói “AI làm được”; hãy nói hệ thống kiểm chứng AI như thế nào.
+        </p>
+      </div>
+
+      <div class="qa-list">
+        <article class="qa-item open">
+          <button class="qa-q" onclick="toggleQA(this)">
+            <span>Vì sao không dùng transcript có sẵn của Google Meet hoặc Zoom?</span>
+            <span>+</span>
+          </button>
+          <div class="qa-a">
+            Transcript có sẵn chủ yếu tạo văn bản thô. Đề tài của nhóm xử lý chuỗi nghiệp vụ sâu hơn:
+            tóm tắt, trích xuất quyết định, sinh action items, gán task, tìm kiếm ngữ nghĩa và liên kết timestamp để kiểm chứng.
+            Khác biệt nằm ở <strong>actionable intelligence</strong>, không chỉ speech-to-text.
+          </div>
+        </article>
+
+        <article class="qa-item">
+          <button class="qa-q" onclick="toggleQA(this)">
+            <span>Làm sao chứng minh AI trích action items đúng?</span>
+            <span>+</span>
+          </button>
+          <div class="qa-a">
+            Nhóm cần chuẩn bị ground truth từ các cuộc họp mẫu, sau đó đo precision/recall.
+            Mỗi action item do AI sinh phải có timestamp nguồn, confidence score và được người dùng xác nhận trước khi chuyển thành task.
+            Đây là thiết kế human-in-the-loop, phù hợp với hệ thống AI trong môi trường thực tế.
+          </div>
+        </article>
+
+        <article class="qa-item">
+          <button class="qa-q" onclick="toggleQA(this)">
+            <span>Độ chính xác tiếng Việt xử lý ra sao?</span>
+            <span>+</span>
+          </button>
+          <div class="qa-a">
+            Tiếng Việt có rủi ro về dấu, giọng vùng miền và nói chồng. Nhóm giảm rủi ro bằng preprocessing audio,
+            dùng model ASR mạnh, lưu transcript theo segment, cho phép sửa transcript và đánh giá WER/CER trên dữ liệu thực.
+            Không nên cam kết chính xác tuyệt đối; nên trình bày ngưỡng chấp nhận và cách cải thiện.
+          </div>
+        </article>
+
+        <article class="qa-item">
+          <button class="qa-q" onclick="toggleQA(this)">
+            <span>Bảo mật dữ liệu cuộc họp được đảm bảo như thế nào?</span>
+            <span>+</span>
+          </button>
+          <div class="qa-a">
+            Hệ thống cần authentication, phân quyền theo workspace, signed URL cho file, mã hóa storage,
+            không expose API key ở client, audit log truy cập và chính sách xóa audio sau thời gian cấu hình.
+            Nếu hội đồng hỏi sâu, nêu rõ MVP phục vụ demo học thuật nhưng kiến trúc đã tính đến bảo mật cơ bản.
+          </div>
+        </article>
+
+        <article class="qa-item">
+          <button class="qa-q" onclick="toggleQA(this)">
+            <span>Nếu cuộc họp dài 2 giờ thì xử lý như thế nào?</span>
+            <span>+</span>
+          </button>
+          <div class="qa-a">
+            Không xử lý trong một request đồng bộ. Backend đưa job vào queue, worker chia audio thành chunk,
+            cập nhật tiến độ qua polling hoặc SSE. Người dùng thấy trạng thái đang xử lý và nhận notification khi xong.
+            Đây là lý do kiến trúc async job quan trọng hơn việc chỉ gọi API từ frontend.
+          </div>
+        </article>
+
+        <article class="qa-item">
+          <button class="qa-q" onclick="toggleQA(this)">
+            <span>Điểm mới của đề tài là gì?</span>
+            <span>+</span>
+          </button>
+          <div class="qa-a">
+            Điểm mới ở cấp đồ án là tích hợp ASR, LLM, structured extraction, vector search và task management vào một hệ thống hoàn chỉnh.
+            Sản phẩm không chỉ tạo nội dung mà còn kiểm chứng nguồn, biến nội dung thành công việc và đo lường chất lượng bằng thực nghiệm.
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    function tab(index){
+      document.querySelectorAll('.tab-btn').forEach((button, i) => {
+        button.classList.toggle('on', i === index);
+      });
+      document.querySelectorAll('.pane').forEach((pane, i) => {
+        pane.classList.toggle('on', i === index);
+      });
+      document.querySelector('.pane.on').scrollIntoView({behavior:'smooth', block:'start'});
+    }
+
+    function toggleQA(button){
+      button.closest('.qa-item').classList.toggle('open');
+    }
+  </script>
+</body>
+</html>

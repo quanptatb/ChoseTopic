@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DATN AI Hub - So sánh 2 đề tài</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#07111f;
+      --panel:#0d1b2e;
+      --card:#132b48;
+      --line:rgba(255,255,255,.09);
+      --text:#eaf4ff;
+      --muted:#9db3c9;
+      --dim:#6f879d;
+      --blue:#38bdf8;
+      --violet:#a78bfa;
+      --green:#34d399;
+      --orange:#fb923c;
+      --red:#f87171;
+      --shadow:0 22px 70px rgba(0,0,0,.32);
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      min-height:100vh;
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 10% 0%,rgba(56,189,248,.17),transparent 32%),
+        radial-gradient(circle at 94% 8%,rgba(167,139,250,.14),transparent 30%),
+        radial-gradient(circle at 50% 100%,rgba(52,211,153,.08),transparent 35%),
+        var(--bg);
+      line-height:1.55;
+    }
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.05;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E");
+    }
+
+    .wrap{
+      width:min(1040px,92vw);
+      margin:0 auto;
+      padding:34px 0 42px;
+      position:relative;
+    }
+    .top{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) auto;
+      gap:18px;
+      align-items:end;
+      margin-bottom:18px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:18px;
+      font-weight:900;
+      letter-spacing:-.03em;
+    }
+    .logo{
+      width:40px;
+      height:40px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      color:#06101d;
+      background:linear-gradient(135deg,var(--blue),var(--violet));
+      box-shadow:0 12px 28px rgba(56,189,248,.2);
+    }
+    .eyebrow{
+      display:inline-flex;
+      width:max-content;
+      max-width:100%;
+      padding:7px 11px;
+      border:1px solid rgba(56,189,248,.24);
+      border-radius:999px;
+      color:var(--blue);
+      background:rgba(56,189,248,.07);
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+    }
+    h1{
+      max-width:780px;
+      margin:12px 0 8px;
+      font-size:clamp(34px,6vw,66px);
+      line-height:.98;
+      letter-spacing:-.07em;
+      font-weight:900;
+    }
+    h1 span{
+      background:linear-gradient(90deg,var(--blue),var(--violet),var(--green));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+    .lead{
+      max-width:760px;
+      color:var(--muted);
+      font-size:15px;
+    }
+    .quick-note{
+      width:240px;
+      padding:14px;
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:rgba(13,27,46,.76);
+      color:var(--muted);
+      font-size:13px;
+    }
+    .quick-note strong{display:block;color:var(--text);margin-bottom:4px}
+
+    .tabs{
+      position:sticky;
+      top:12px;
+      z-index:10;
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:8px;
+      margin:18px 0;
+      padding:8px;
+      border:1px solid var(--line);
+      border-radius:20px;
+      background:rgba(13,27,46,.86);
+      box-shadow:0 14px 36px rgba(0,0,0,.22);
+      backdrop-filter:blur(16px);
+    }
+    .tab{
+      border:0;
+      border-radius:14px;
+      padding:13px 14px;
+      color:var(--muted);
+      background:transparent;
+      font:900 14px Inter,system-ui,sans-serif;
+      cursor:pointer;
+      transition:.18s ease;
+    }
+    .tab:hover{color:var(--blue);background:rgba(56,189,248,.08)}
+    .tab.active{
+      color:#06101d;
+      background:linear-gradient(135deg,var(--blue),var(--violet));
+      box-shadow:0 12px 26px rgba(56,189,248,.17);
+    }
+
+    .topic{display:none;animation:rise .24s ease both}
+    .topic.active{display:block}
+    @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+    .hero-card{
+      display:grid;
+      grid-template-columns:minmax(0,1.08fr) minmax(290px,.92fr);
+      gap:14px;
+      margin-bottom:14px;
+    }
+    .card{
+      overflow:hidden;
+      position:relative;
+      padding:20px;
+      border:1px solid var(--line);
+      border-radius:22px;
+      background:linear-gradient(145deg,rgba(19,43,72,.86),rgba(13,27,46,.9));
+      box-shadow:var(--shadow);
+    }
+    .card.glow::after{
+      content:"";
+      position:absolute;
+      width:230px;
+      height:230px;
+      right:-100px;
+      top:-120px;
+      border-radius:50%;
+      background:radial-gradient(circle,rgba(56,189,248,.22),transparent 70%);
+      filter:blur(10px);
+    }
+    .card > *{position:relative}
+    .kicker{
+      color:var(--blue);
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+    }
+    h2{
+      margin:8px 0 10px;
+      font-size:clamp(26px,4vw,42px);
+      line-height:1.04;
+      letter-spacing:-.055em;
+    }
+    h2 span{
+      background:linear-gradient(90deg,var(--blue),var(--violet),var(--green));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+    h3{
+      margin-bottom:9px;
+      font-size:16px;
+      line-height:1.25;
+    }
+    p,li{color:var(--muted);font-size:13px}
+    ul{padding-left:18px}
+    li{margin:6px 0}
+    .tags{
+      display:flex;
+      flex-wrap:wrap;
+      gap:7px;
+      margin-top:13px;
+    }
+    .tag{
+      display:inline-flex;
+      padding:5px 9px;
+      border:1px solid rgba(255,255,255,.1);
+      border-radius:999px;
+      color:var(--muted);
+      background:rgba(255,255,255,.055);
+      font-size:11px;
+      font-weight:900;
+    }
+    .blue{color:var(--blue);background:rgba(56,189,248,.09);border-color:rgba(56,189,248,.23)}
+    .green{color:var(--green);background:rgba(52,211,153,.09);border-color:rgba(52,211,153,.23)}
+    .violet{color:var(--violet);background:rgba(167,139,250,.09);border-color:rgba(167,139,250,.23)}
+    .orange{color:var(--orange);background:rgba(251,146,60,.09);border-color:rgba(251,146,60,.23)}
+    .red{color:var(--red);background:rgba(248,113,113,.09);border-color:rgba(248,113,113,.23)}
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:10px;
+    }
+    .stat{
+      padding:14px;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      background:rgba(255,255,255,.045);
+    }
+    .stat strong{
+      display:block;
+      color:var(--text);
+      font-size:26px;
+      line-height:1;
+      font-weight:900;
+      letter-spacing:-.04em;
+    }
+    .stat span{
+      color:var(--muted);
+      font-size:12px;
+      font-weight:700;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:14px;
+      margin-bottom:14px;
+    }
+    .mini{
+      padding:17px;
+      border:1px solid var(--line);
+      border-radius:20px;
+      background:rgba(13,27,46,.72);
+    }
+    .roadmap{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+      margin-top:10px;
+    }
+    .phase{
+      padding:13px;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      background:rgba(255,255,255,.04);
+    }
+    .phase b{
+      display:block;
+      color:var(--blue);
+      font-size:12px;
+      margin-bottom:4px;
+    }
+    .phase span{
+      display:block;
+      color:var(--muted);
+      font-size:12px;
+    }
+    .compare{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:14px;
+      margin-top:4px;
+    }
+    .footer{
+      margin-top:20px;
+      padding-top:18px;
+      border-top:1px solid var(--line);
+      color:var(--dim);
+      font-size:12px;
+    }
+
+    @media(max-width:860px){
+      .top,.hero-card,.grid,.compare{grid-template-columns:1fr}
+      .quick-note{width:auto}
+      .tabs{position:static}
+    }
+    @media(max-width:560px){
+      .wrap{width:min(100% - 20px,1040px);padding-top:22px}
+      .tabs,.stats,.roadmap{grid-template-columns:1fr}
+      .tab{padding:12px}
+      .card{padding:17px}
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="brand"><div class="logo">AI</div><div>DATN AI Hub</div></div>
+
+    <header class="top">
+      <div>
+        <div class="eyebrow">So sánh nhanh 2 đề tài</div>
+        <h1>Chọn chủ đề</h1>
+        <p class="lead">
+          Dùng tab bên dưới để chuyển giữa hai hướng đề tài. Nội dung được rút gọn để dễ đọc,
+          tập trung vào mục tiêu, MVP, điểm bảo vệ, rủi ro và kế hoạch triển khai.
+        </p>
+      </div>
+      <aside class="quick-note">
+        <strong>Ưu tiên hiển thị</strong>
+        Một màn hình đọc nhanh, không redirect, không mở trang mới khi đổi chủ đề.
+      </aside>
+    </header>
+
+    <nav class="tabs" role="tablist" aria-label="Chọn chủ đề đề tài">
+      <button class="tab active" role="tab" aria-selected="true" aria-controls="topic-omnibiz" onclick="showTopic(0)">OmniBiz AI</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="topic-meeting" onclick="showTopic(1)">Meeting AI Analysis</button>
+    </nav>
+
+    <section class="topic active" id="topic-omnibiz" role="tabpanel">
+      <div class="hero-card">
+        <article class="card glow">
+          <div class="kicker">Enterprise AI · SME</div>
+          <h2><span>OmniBiz AI</span><br>AI Business Operating System</h2>
+          <p>
+            Hệ thống vận hành doanh nghiệp cho SME: tài chính, KPI/OKR, nhân sự, workflow phê duyệt
+            và AI Copilot hỗ trợ phân tích dữ liệu nội bộ.
+          </p>
+          <div class="tags">
+            <span class="tag blue">Finance</span>
+            <span class="tag violet">Workflow</span>
+            <span class="tag green">AI Copilot</span>
+            <span class="tag orange">KPI/OKR</span>
+          </div>
+        </article>
+        <aside class="card">
+          <h3>Chỉ số nhanh</h3>
+          <div class="stats">
+            <div class="stat"><strong>5</strong><span>module lõi</span></div>
+            <div class="stat"><strong>7</strong><span>vai trò nhóm</span></div>
+            <div class="stat"><strong>12</strong><span>tuần MVP</span></div>
+            <div class="stat"><strong>AI</strong><span>risk + report + RAG</span></div>
+          </div>
+        </aside>
+      </div>
+
+      <div class="grid">
+        <article class="mini">
+          <h3>MVP nên làm</h3>
+          <ul>
+            <li>Dashboard điều hành theo role.</li>
+            <li>Quản lý ngân sách và đề nghị chi.</li>
+            <li>KPI/OKR, workflow duyệt, audit log.</li>
+            <li>AI hỏi đáp và tóm tắt báo cáo.</li>
+          </ul>
+        </article>
+        <article class="mini">
+          <h3>Điểm bảo vệ</h3>
+          <ul>
+            <li>Nghiệp vụ thật, không chỉ CRUD.</li>
+            <li>RBAC, workflow engine, dashboard.</li>
+            <li>AI dùng dữ liệu nội bộ có nguồn.</li>
+            <li>Dễ chia việc cho nhóm đông.</li>
+          </ul>
+        </article>
+        <article class="mini">
+          <h3>Rủi ro</h3>
+          <ul>
+            <li>Scope rộng, dễ thành ERP quá lớn.</li>
+            <li>Cần seed data đủ thật để demo.</li>
+            <li>AI phải có citation để tránh trả lời mơ hồ.</li>
+          </ul>
+        </article>
+      </div>
+
+      <article class="card">
+        <h3>Roadmap 12 tuần</h3>
+        <div class="roadmap">
+          <div class="phase"><b>Tuần 1-4</b><span>Scope, database, auth, finance, KPI core.</span></div>
+          <div class="phase"><b>Tuần 5-8</b><span>Workflow, dashboard, AI Copilot, báo cáo.</span></div>
+          <div class="phase"><b>Tuần 9-12</b><span>Testing, hardening, demo data, báo cáo và slide.</span></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="topic" id="topic-meeting" role="tabpanel">
+      <div class="hero-card">
+        <article class="card glow">
+          <div class="kicker">Speech AI · Productivity</div>
+          <h2><span>Meeting AI Analysis</span><br>Biến cuộc họp thành công việc</h2>
+          <p>
+            Nền tảng phân tích cuộc họp: chuyển audio thành transcript, tóm tắt nội dung,
+            trích quyết định/action items, tìm kiếm ngữ nghĩa và theo dõi task sau họp.
+          </p>
+          <div class="tags">
+            <span class="tag blue">Whisper</span>
+            <span class="tag violet">LLM</span>
+            <span class="tag green">RAG</span>
+            <span class="tag orange">Action Items</span>
+          </div>
+        </article>
+        <aside class="card">
+          <h3>Chỉ số nhanh</h3>
+          <div class="stats">
+            <div class="stat"><strong>5</strong><span>module lõi</span></div>
+            <div class="stat"><strong>20+</strong><span>mẫu đánh giá</span></div>
+            <div class="stat"><strong>12</strong><span>sprint triển khai</span></div>
+            <div class="stat"><strong>86</strong><span>điểm khả thi</span></div>
+          </div>
+        </aside>
+      </div>
+
+      <div class="grid">
+        <article class="mini">
+          <h3>MVP nên làm</h3>
+          <ul>
+            <li>Upload audio và xử lý async.</li>
+            <li>Transcript có timestamp.</li>
+            <li>Summary, decisions, action items.</li>
+            <li>Task board và semantic search.</li>
+          </ul>
+        </article>
+        <article class="mini">
+          <h3>Điểm bảo vệ</h3>
+          <ul>
+            <li>Pipeline AI end-to-end rõ ràng.</li>
+            <li>Có grounding và citation timestamp.</li>
+            <li>Đo WER, precision/recall action items.</li>
+            <li>Demo trực quan bằng cuộc họp thật.</li>
+          </ul>
+        </article>
+        <article class="mini">
+          <h3>Rủi ro</h3>
+          <ul>
+            <li>Tiếng Việt có giọng vùng miền, nhiễu.</li>
+            <li>LLM có thể hallucinate action items.</li>
+            <li>File dài cần queue và chunking.</li>
+          </ul>
+        </article>
+      </div>
+
+      <article class="card">
+        <h3>Roadmap 12 tuần</h3>
+        <div class="roadmap">
+          <div class="phase"><b>Tuần 1-4</b><span>Upload, Whisper, transcript, summary, action items.</span></div>
+          <div class="phase"><b>Tuần 5-8</b><span>Dashboard, search, notification, export biên bản.</span></div>
+          <div class="phase"><b>Tuần 9-12</b><span>Benchmark AI, security, user testing, demo và báo cáo.</span></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="compare">
+      <article class="mini">
+        <h3>Chọn OmniBiz nếu...</h3>
+        <p>Nhóm muốn đề tài rộng về nghiệp vụ, nhiều module để chia việc, dashboard và workflow là điểm chính.</p>
+      </article>
+      <article class="mini">
+        <h3>Chọn Meeting AI nếu...</h3>
+        <p>Nhóm muốn tập trung vào AI pipeline, NLP, RAG, đo lường chất lượng và demo bằng dữ liệu cuộc họp thật.</p>
+      </article>
+    </section>
+
+    <footer class="footer">
+      DATN AI Hub - bản tab tổng gọn, chuyển chủ đề trong cùng một trang.
+    </footer>
+  </main>
+
+  <script>
+    function showTopic(index){
+      document.querySelectorAll('.tab').forEach((tab, i) => {
+        const active = i === index;
+        tab.classList.toggle('active', active);
+        tab.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
+      document.querySelectorAll('.topic').forEach((topic, i) => {
+        topic.classList.toggle('active', i === index);
+      });
+    }
+  </script>
+</body>
+</html>

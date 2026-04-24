@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OmniBiz AI — Phân tích đề tài tốt nghiệp</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#07111f;
+      --surface:#0d1b2e;
+      --surface2:#10243d;
+      --card:#132b48;
+      --border:#21415f;
+      --text:#eaf4ff;
+      --muted:#9db3c9;
+      --dim:#6f879d;
+      --blue:#38bdf8;
+      --violet:#a78bfa;
+      --green:#34d399;
+      --orange:#fb923c;
+      --red:#f87171;
+      --yellow:#facc15;
+      --shadow:0 24px 80px rgba(0,0,0,.35);
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at 15% 0%, rgba(56,189,248,.16), transparent 34%),
+        radial-gradient(circle at 90% 10%, rgba(167,139,250,.13), transparent 30%),
+        radial-gradient(circle at 50% 100%, rgba(52,211,153,.08), transparent 35%),
+        var(--bg);
+      color:var(--text);
+      line-height:1.65;
+    }
+
+    .noise{
+      position:fixed;inset:0;pointer-events:none;z-index:99;opacity:.055;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E");
+    }
+
+    .container{width:min(1180px,92vw);margin:0 auto}
+    .nav{
+      position:sticky;top:0;z-index:50;
+      backdrop-filter:blur(18px);
+      background:rgba(7,17,31,.76);
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    .nav-inner{
+      height:72px;display:flex;align-items:center;justify-content:space-between;gap:20px;
+    }
+    .brand{display:flex;align-items:center;gap:12px;font-weight:900;letter-spacing:-.03em}
+    .logo{
+      width:42px;height:42px;border-radius:14px;
+      background:linear-gradient(135deg,var(--blue),var(--violet));
+      display:grid;place-items:center;color:#03101f;font-weight:900;box-shadow:0 12px 30px rgba(56,189,248,.22)
+    }
+    .nav-links{display:flex;gap:18px;flex-wrap:wrap}
+    .nav-links a{
+      color:var(--muted);text-decoration:none;font-size:13px;font-weight:700;
+    }
+    .nav-links a:hover{color:var(--blue)}
+
+    .hero{padding:76px 0 54px}
+    .eyebrow{
+      display:inline-flex;align-items:center;gap:10px;
+      color:var(--blue);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.18em;
+      padding:8px 12px;border:1px solid rgba(56,189,248,.24);border-radius:999px;background:rgba(56,189,248,.07)
+    }
+    .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:34px;align-items:center;margin-top:24px}
+    h1{
+      font-size:clamp(42px,7vw,86px);line-height:.98;letter-spacing:-.07em;
+      margin:18px 0 22px;font-weight:900;
+    }
+    h1 span{
+      background:linear-gradient(90deg,var(--blue),var(--violet),var(--green));
+      -webkit-background-clip:text;background-clip:text;color:transparent;
+    }
+    .lead{font-size:18px;color:var(--muted);max-width:720px}
+    .cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
+    .btn{
+      padding:13px 18px;border-radius:14px;text-decoration:none;font-weight:800;font-size:14px;
+      border:1px solid rgba(255,255,255,.1);display:inline-flex;align-items:center;gap:8px
+    }
+    .btn.primary{background:linear-gradient(135deg,var(--blue),var(--violet));color:#06101d;border:none}
+    .btn.ghost{color:var(--text);background:rgba(255,255,255,.05)}
+    .hero-card{
+      background:linear-gradient(145deg,rgba(19,43,72,.92),rgba(13,27,46,.92));
+      border:1px solid rgba(255,255,255,.1);border-radius:28px;padding:26px;box-shadow:var(--shadow);
+      position:relative;overflow:hidden;
+    }
+    .hero-card::before{
+      content:"";position:absolute;inset:-120px -80px auto auto;width:260px;height:260px;border-radius:50%;
+      background:radial-gradient(circle,rgba(56,189,248,.22),transparent 70%);filter:blur(12px)
+    }
+    .score{
+      display:grid;grid-template-columns:repeat(2,1fr);gap:14px;position:relative
+    }
+    .score-box{
+      background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08);
+      border-radius:20px;padding:18px;
+    }
+    .score-box strong{display:block;font-size:30px;line-height:1;font-weight:900;color:var(--text)}
+    .score-box span{font-size:12px;color:var(--muted);font-weight:700}
+
+    section{padding:34px 0}
+    .section-head{margin-bottom:18px}
+    .kicker{color:var(--blue);font-weight:900;font-size:12px;text-transform:uppercase;letter-spacing:.18em}
+    h2{font-size:clamp(28px,4vw,46px);line-height:1.08;letter-spacing:-.045em;margin-top:8px}
+    .sub{color:var(--muted);max-width:850px;margin-top:10px}
+
+    .grid{display:grid;gap:18px}
+    .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .card{
+      background:linear-gradient(145deg,rgba(19,43,72,.86),rgba(13,27,46,.88));
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:24px;padding:22px;box-shadow:0 14px 45px rgba(0,0,0,.18);
+    }
+    .card h3{font-size:18px;line-height:1.25;margin-bottom:10px}
+    .card p,.card li{color:var(--muted);font-size:14px}
+    ul{padding-left:18px}
+    li{margin:7px 0}
+    .tag{
+      display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;
+      font-size:12px;font-weight:800;margin:3px 4px 3px 0;
+      background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:var(--muted)
+    }
+    .tag.blue{color:var(--blue);background:rgba(56,189,248,.09);border-color:rgba(56,189,248,.23)}
+    .tag.green{color:var(--green);background:rgba(52,211,153,.09);border-color:rgba(52,211,153,.23)}
+    .tag.orange{color:var(--orange);background:rgba(251,146,60,.09);border-color:rgba(251,146,60,.23)}
+    .tag.violet{color:var(--violet);background:rgba(167,139,250,.09);border-color:rgba(167,139,250,.23)}
+    .tag.red{color:var(--red);background:rgba(248,113,113,.09);border-color:rgba(248,113,113,.23)}
+
+    .what-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px}
+    .what{
+      padding:18px;border-radius:20px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08)
+    }
+    .what .label{color:var(--blue);font-size:12px;font-weight:900;letter-spacing:.16em;text-transform:uppercase}
+    .what strong{display:block;margin-top:7px;font-size:18px}
+
+    .flow{
+      display:flex;gap:10px;align-items:stretch;flex-wrap:wrap;
+    }
+    .step{
+      flex:1 1 150px;min-width:140px;
+      background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;padding:16px;position:relative
+    }
+    .step b{display:block;font-size:13px;color:var(--blue);margin-bottom:6px}
+    .step span{font-size:13px;color:var(--muted)}
+
+    .table-wrap{overflow:auto;border:1px solid rgba(255,255,255,.09);border-radius:22px;background:rgba(255,255,255,.035)}
+    table{width:100%;border-collapse:collapse;min-width:780px}
+    th,td{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.07);text-align:left;font-size:14px;vertical-align:top}
+    th{color:var(--blue);font-size:12px;text-transform:uppercase;letter-spacing:.12em;background:rgba(56,189,248,.055)}
+    td{color:var(--muted)}
+    td strong{color:var(--text)}
+    tr:last-child td{border-bottom:none}
+
+    .architecture{
+      display:grid;gap:14px;
+    }
+    .arch-row{
+      display:grid;grid-template-columns:180px 1fr;gap:14px;align-items:stretch
+    }
+    .arch-label{
+      display:grid;place-items:center;text-align:center;border-radius:18px;
+      background:linear-gradient(135deg,rgba(56,189,248,.15),rgba(167,139,250,.12));
+      border:1px solid rgba(56,189,248,.24);font-weight:900;color:var(--text);padding:14px
+    }
+    .arch-content{
+      border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:14px;background:rgba(255,255,255,.04)
+    }
+
+    .timeline{position:relative;padding-left:20px}
+    .timeline::before{content:"";position:absolute;left:7px;top:8px;bottom:8px;width:2px;background:linear-gradient(var(--blue),var(--violet),var(--green))}
+    .mile{position:relative;margin-bottom:16px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:16px}
+    .mile::before{content:"";position:absolute;left:-19px;top:20px;width:12px;height:12px;border-radius:50%;background:var(--blue);box-shadow:0 0 0 5px rgba(56,189,248,.12)}
+    .mile h3{font-size:16px;margin-bottom:5px}
+    .mile p{color:var(--muted);font-size:14px}
+
+    .footer{
+      margin-top:38px;padding:34px 0 50px;border-top:1px solid rgba(255,255,255,.08);color:var(--dim);font-size:13px
+    }
+
+    @media(max-width:920px){
+      .hero-grid,.grid-2,.grid-3,.grid-4,.what-grid{grid-template-columns:1fr}
+      .nav-links{display:none}
+      .arch-row{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="noise"></div>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <div class="brand"><div class="logo">OB</div><div>OmniBiz AI</div></div>
+      <div class="nav-links">
+        <a href="index.html">Trang tổng</a>
+        <a href="meeting-ai-analysis.html">Meeting AI</a>
+        <a href="#tong-quan">Tổng quan</a>
+        <a href="#pham-vi">Phạm vi</a>
+        <a href="#chuc-nang">Chức năng</a>
+        <a href="#kien-truc">Kiến trúc</a>
+        <a href="#roadmap">Roadmap</a>
+        <a href="#team">Team 7 người</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <div class="eyebrow">Đề tài tốt nghiệp · Enterprise AI · SME</div>
+      <div class="hero-grid">
+        <div>
+          <h1><span>OmniBiz AI</span><br/>AI Business Operating System cho SME</h1>
+          <p class="lead">
+            Hệ thống vận hành doanh nghiệp tích hợp tài chính, KPI/OKR, nhân sự, workflow phê duyệt và AI Copilot,
+            giúp doanh nghiệp vừa & nhỏ ra quyết định dựa trên dữ liệu thay vì cảm tính.
+          </p>
+          <div class="cta-row">
+            <a class="btn primary" href="#chuc-nang">Xem chức năng chính →</a>
+            <a class="btn ghost" href="#kien-truc">Kiến trúc hệ thống</a>
+          </div>
+        </div>
+
+        <div class="hero-card">
+          <div class="score">
+            <div class="score-box"><strong>5</strong><span>Module nghiệp vụ lõi</span></div>
+            <div class="score-box"><strong>7</strong><span>Vai trò phát triển</span></div>
+            <div class="score-box"><strong>12</strong><span>Tuần triển khai MVP</span></div>
+            <div class="score-box"><strong>AI</strong><span>Copilot + Risk + Forecast</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="tong-quan">
+      <div class="container">
+        <div class="section-head">
+          <div class="kicker">01 · What / Where / Who / How</div>
+          <h2>Bản chất đề tài</h2>
+          <p class="sub">Tên đề tài phải trả lời đủ 4 câu hỏi: làm cái gì, dùng ở đâu, cho ai, và giải quyết bằng cách nào.</p>
+        </div>
+
+        <div class="what-grid">
+          <div class="what">
+            <div class="label">WHAT</div>
+            <strong>Business Operating System</strong>
+            <p>Hệ thống vận hành doanh nghiệp thống nhất: tài chính, KPI, nhân sự, quy trình.</p>
+          </div>
+          <div class="what">
+            <div class="label">WHERE</div>
+            <strong>SME / Doanh nghiệp nội bộ</strong>
+            <p>Áp dụng cho doanh nghiệp vừa & nhỏ, phòng ban tài chính, HR, ban giám đốc.</p>
+          </div>
+          <div class="what">
+            <div class="label">WHO</div>
+            <strong>Director, Manager, Accountant, HR, Staff</strong>
+            <p>Mỗi vai trò có dashboard, quyền hạn, dữ liệu và tác vụ riêng.</p>
+          </div>
+          <div class="what">
+            <div class="label">HOW</div>
+            <strong>AI + Workflow + Data Analytics</strong>
+            <p>Dùng AI Copilot, cảnh báo rủi ro, dự báo xu hướng, workflow phê duyệt đa cấp.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="van-de">
+      <div class="container">
+        <div class="section-head">
+          <div class="kicker">02 · Problem Statement</div>
+          <h2>“Chỗ ngứa” của thời đại</h2>
+          <p class="sub">Doanh nghiệp nhỏ không thiếu dữ liệu, nhưng thiếu hệ thống biến dữ liệu thành hành động.</p>
+        </div>
+
+        <div class="grid grid-3">
+          <div class="card">
+            <h3>1. Dữ liệu rời rạc</h3>
+            <p>Doanh nghiệp dùng Excel, Zalo, Google Sheet, phần mềm kế toán riêng lẻ. Dữ liệu khó tổng hợp, khó audit, khó ra quyết định nhanh.</p>
+          </div>
+          <div class="card">
+            <h3>2. Quy trình thủ công</h3>
+            <p>Đề nghị chi, duyệt ngân sách, đánh giá KPI thường phụ thuộc tin nhắn hoặc giấy tờ. Dễ thất lạc, thiếu minh bạch.</p>
+          </div>
+          <div class="card">
+            <h3>3. AI chưa gắn với nghiệp vụ</h3>
+            <p>Nhiều hệ thống chỉ “gắn chatbot cho có”. OmniBiz AI dùng AI trên dữ liệu thật: ngân sách, KPI, dòng tiền, hiệu suất.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="pham-vi">
+      <div class="container">
+        <div class="section-head">
+          <div class="kicker">03 · Scope</div>
+          <h2>Phạm vi dự án khả thi cho nhóm 7 người</h2>
+          <p class="sub">Không làm ERP quá rộng. MVP tập trung vào 5 module tạo giá trị rõ nhất và có thể demo tốt trước hội đồng.</p>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Module</th>
+                <th>Mục tiêu</th>
+                <th>Chức năng cần có trong MVP</th>
+                <th>Điểm ăn điểm</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Finance</strong></td>
+                <td>Quản lý ngân sách, chi phí, dòng tiền</td>
+                <td>Budget, payment request, transaction, wallet, cashflow chart</td>
+                <td>AI cảnh báo vượt ngân sách, dự báo cash runway</td>
+              </tr>
+              <tr>
+                <td><strong>KPI/OKR</strong></td>
+                <td>Theo dõi mục tiêu và hiệu suất</td>
+                <td>OKR, KPI, check-in, duyệt kết quả, dashboard tiến độ</td>
+                <td>AI phân tích hiệu suất, gợi ý hành động cải thiện</td>
+              </tr>
+              <tr>
+                <td><strong>HR Basic</strong></td>
+                <td>Quản lý nhân sự nền tảng</td>
+                <td>Employee, department, position, role, permission</td>
+                <td>Role-based dashboard theo từng nhóm người dùng</td>
+              </tr>
+              <tr>
+                <td><strong>Workflow Engine</strong></td>
+                <td>Chuẩn hóa phê duyệt nội bộ</td>
+                <td>Template, approval step, condition, approve/reject, audit log</td>
+                <td>Config rule theo số tiền, % budget, cấp bậc</td>
+              </tr>
+              <tr>
+                <td><strong>AI Copilot</strong></td>
+                <td>Trợ lý phân tích dữ liệu doanh nghiệp</td>
+                <td>Chat Q&A, insight, risk alert, report summary</td>
+                <td>RAG + citation + biểu đồ tự động</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="chuc-nang">
+      <div class="container">
+        <div class="section-head">
+          <div class="kicker">04 · Features</div>
+          <h2>Chức năng chi tiết sau khi chọn đề tài</h2>
+          <p class="sub">Danh sách dưới đây đủ để viết proposal, chia task, thiết kế database và demo sản phẩm.</p>
+        </div>
+
+        <div class="grid grid-2">
+          <div class="card">
+            <h3>Dashboard điều hành</h3>
+            <ul>
+              <li>Tổng quan thu/chi, ngân sách còn lại, KPI hoàn thành.</li>
+              <li>Biểu đồ chi phí theo phòng ban, danh mục, thời gian.</li>
+              <li>Top rủi ro: khoản chi bất thường, KPI tụt, phòng ban vượt budget.</li>
+              <li>Dashboard theo role: Director nhìn toàn công ty, Manager nhìn phòng ban.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3>Quản lý ngân sách & đề nghị chi</h3>
+            <ul>
+              <li>Tạo ngân sách theo kỳ, phòng ban, danh mục.</li>
+              <li>Tạo đề nghị thanh toán kèm line items, nhà cung cấp, file đính kèm.</li>
+              <li>Duyệt chi nhiều cấp theo rule.</li>
+              <li>AI kiểm tra rủi ro trước khi gửi duyệt.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3>KPI/OKR & đánh giá hiệu suất</h3>
+            <ul>
+              <li>Tạo OKR, Key Result, KPI theo kỳ đánh giá.</li>
+              <li>Phân bổ KPI cho phòng ban hoặc nhân viên.</li>
+              <li>Check-in tiến độ và duyệt check-in.</li>
+              <li>Tự tính điểm, xếp loại, cảnh báo KPI có nguy cơ fail.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3>AI Copilot doanh nghiệp</h3>
+            <ul>
+              <li>Hỏi đáp tự nhiên: “Tháng này phòng nào vượt ngân sách?”</li>
+              <li>Tạo báo cáo tóm tắt theo tháng/quý.</li>
+              <li>Gợi ý hành động: cắt chi, tăng ngân sách, điều chỉnh KPI.</li>
+              <li>RAG trên dữ liệu nội bộ + trích dẫn nguồn.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3>Workflow & Audit</h3>
+            <ul>
+              <li>Thiết lập luồng duyệt theo từng loại nghiệp vụ.</li>
+              <li>Điều kiện: số tiền, % ngân sách, vai trò, phòng ban.</li>
+              <li>Lưu lịch sử approve/reject/comment.</li>
+              <li>Audit log cho đăng nhập, tạo/sửa/xóa, duyệt, xuất báo cáo.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3>Bảo mật & phân quyền</h3>
+            <ul>
+              <li>Authentication: email/password, optional Google OAuth.</li>
+              <li>RBAC: Admin, Director, Manager, Accountant, HR, Staff.</li>
+              <li>Permission-level access cho từng action.</li>
+              <li>Data scope: ai chỉ thấy dữ liệu thuộc phạm vi được phép.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="kien-truc">
+      <div class="container">
+        <div class="section-head">
+          <div class="kicker">05 · Architecture</div>
+          <h2>Kiến trúc kỹ thuật đề xuất</h2>
+          <p class="sub">Có thể chọn .NET để tận dụng nền tảng sẵn có, hoặc Next.js/NestJS nếu muốn stack hiện đại hơn. Khuyến nghị bên dưới cân bằng giữa độ ổn định và demo đẹp.</p>
+        </div>
+
+        <div class="architecture">
+          <div class="arch-row">
+            <div class="arch-label">Frontend</div>
+            <div class="arch-content">
+              <span class="tag blue">Next.js</span>
+              <span class="tag">React</span>
+              <span class="tag">Tailwind CSS</span>
+              <span class="tag">Recharts / ECharts</span>
+              <p>Giao diện dashboard, form nghiệp vụ, bảng dữ liệu, workflow visual, AI chat panel.</p>
+            </div>
+          </div>
+
+          <div class="arch-row">
+            <div class="arch-label">Backend API</div>
+            <div class="arch-content">
+              <span class="tag green">ASP.NET Core Web API</span>
+              <span class="tag">Entity Framework Core</span>
+              <span class="tag">Clean Architecture</span>
+              <span class="tag">SignalR</span>
+              <p>Xử lý nghiệp vụ, phân quyền, workflow, báo cáo, notification realtime.</p>
+            </div>
+          </div>
+
+          <div class="arch-row">
+            <div class="arch-label">Database</div>
+            <div class="arch-content">
+              <span class="tag violet">PostgreSQL</span>
+              <span class="tag">SQL Server</span>
+              <span class="tag">Redis Cache</span>
+              <p>Lưu dữ liệu nghiệp vụ, audit log, workflow instance, KPI, ngân sách, giao dịch.</p>
+            </div>
+          </div>
+
+          <div class="arch-row">
+            <div class="arch-label">AI Layer</div>
+            <div class="arch-content">
+              <span class="tag orange">LLM API</span>
+              <span class="tag">RAG</span>
+              <span class="tag">Vector DB</span>
+              <span class="tag">Prompt Guardrails</span>
+              <p>AI Copilot, risk scoring, report summary, forecast insight, hỏi đáp có ngữ cảnh.</p>
+            </div>
+          </div>
+
+          <div class="arch-row">
+            <div class="arch-label">Deployment</div>
+            <div class="arch-content">
+              <span class="tag red">Docker</span>
+              <span class="tag">GitHub Actions</span>
+              <span class="tag">VPS / Azure / Render</span>
+              <p>Triển khai demo public, backup database, seed data, logging và monitoring cơ bản.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="ai">
+      <div class="container">
+        <div class="section-head">
+          <div class="kicker">06 · AI Depth</div>
+          <h2>AI không chỉ là chatbot</h2>
+          <p class="sub">Điểm khác biệt của đề tài là AI được gắn vào nghiệp vụ thật, có dữ liệu đầu vào rõ ràng và output có thể kiểm chứng.</p>
+        </div>
+
+        <div class="grid grid-4">
+          <div class="card">
+            <h3>AI Spend Guardrail</h3>
+            <p>Phân tích khoản chi: vượt budget, trùng lặp, nhà cung cấp bất thường, mức ưu tiên không hợp lý.</p>
+          </div>
+          <div class="card">
+            <h3>AI KPI Insight</h3>
+            <p>Phát hiện KPI tụt, phòng ban chậm tiến độ, nhân viên cần hỗ trợ, mục tiêu không thực tế.</p>
+          </div>
+          <div class="card">
+            <h3>AI Report Writer</h3>
+            <p>Tự tạo báo cáo tháng/quý kèm số liệu, biểu đồ, nhận xét và khuyến nghị.</p>
+          </div>
+          <div class="card">
+            <h3>AI Q&A + RAG</h3>
+            <p>Người dùng hỏi bằng tiếng Việt, hệ thống trả lời dựa trên dữ liệu nội bộ và trích nguồn.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="workflow">
+      <div class="container">
+        <div class="section-head">
+          <div class="kicker">07 · Business Flow</div>
+          <h2>Luồng nghiệp vụ mẫu để demo</h2>
+          <p class="sub">Một kịch bản demo tốt nên đi từ dữ liệu thật → workflow → AI phân tích → dashboard cập nhật.</p>
+        </div>
+
+        <div class="flow">
+          <div class="step"><b>Bước 1</b><span>Staff tạo đề nghị chi marketing 80 triệu.</span></div>
+          <div class="step"><b>Bước 2</b><span>AI cảnh báo chiếm 45% ngân sách tháng và có NCC tương tự trong 7 ngày.</span></div>
+          <div class="step"><b>Bước 3</b><span>Workflow tự chuyển Manager duyệt, sau đó Director duyệt vì vượt ngưỡng.</span></div>
+          <div class="step"><b>Bước 4</b><span>Sau khi duyệt, dashboard cập nhật ngân sách còn lại và cashflow.</span></div>
+          <div class="step"><b>Bước 5</b><span>Director hỏi AI: “Có nên duyệt tiếp campaign tuần sau không?”</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="roadmap">
+      <div class="container">
+        <div class="section-head">
+          <div class="kicker">08 · Roadmap</div>
+          <h2>Lộ trình 12 tuần</h2>
+          <p class="sub">Chia theo milestone để tránh scope creep và đảm bảo cuối kỳ có sản phẩm demo ổn định.</p>
+        </div>
+
+        <div class="timeline">
+          <div class="mile">
+            <h3>Tuần 1–2: Phân tích & thiết kế</h3>
+            <p>Chốt scope MVP, use case, ERD, phân quyền, architecture, wireframe dashboard.</p>
+          </div>
+          <div class="mile">
+            <h3>Tuần 3–5: Backend core</h3>
+            <p>Auth, RBAC, employee, department, finance, KPI/OKR, database migration, seed data.</p>
+          </div>
+          <div class="mile">
+            <h3>Tuần 6–7: Workflow & dashboard</h3>
+            <p>Workflow engine, approval instance, notification, chart, role-based dashboard.</p>
+          </div>
+          <div class="mile">
+            <h3>Tuần 8–9: AI layer</h3>
+            <p>AI risk analysis, Q&A, report summary, prompt template, RAG prototype.</p>
+          </div>
+          <div class="mile">
+            <h3>Tuần 10–11: Testing & hardening</h3>
+            <p>Test nghiệp vụ, fix bug, bảo mật, performance, UI polish, audit log.</p>
+          </div>
+          <div class="mile">
+            <h3>Tuần 12: Demo & báo cáo</h3>
+            <p>Chuẩn bị slide, script demo, tài khoản mẫu, video backup, tài liệu triển khai.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="team">
+      <div class="container">
+        <div class="section-head">
+          <div class="kicker">09 · Team Allocation</div>
+          <h2>Phân công nhóm 7 người</h2>
+          <p class="sub">Mỗi người nên có ownership rõ ràng, tránh chồng chéo và dễ đánh giá đóng góp cá nhân.</p>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Thành viên</th>
+                <th>Vai trò</th>
+                <th>Phụ trách chính</th>
+                <th>Deliverable</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Member 1</strong></td><td>Tech Lead / Backend</td><td>Architecture, Auth, RBAC, code review</td><td>Base project, permission system, API convention</td></tr>
+              <tr><td><strong>Member 2</strong></td><td>Backend Finance</td><td>Budget, transaction, payment request</td><td>Finance API, validation, report data</td></tr>
+              <tr><td><strong>Member 3</strong></td><td>Backend KPI/Workflow</td><td>KPI/OKR, check-in, approval engine</td><td>KPI API, workflow rule engine</td></tr>
+              <tr><td><strong>Member 4</strong></td><td>AI Engineer</td><td>Prompt, RAG, risk scoring, AI report</td><td>AI Copilot, AI insight, test cases</td></tr>
+              <tr><td><strong>Member 5</strong></td><td>Frontend Dashboard</td><td>Layout, dashboard, charts, AI chat panel</td><td>Director/Manager dashboard, visualizations</td></tr>
+              <tr><td><strong>Member 6</strong></td><td>Frontend Business UI</td><td>Forms, tables, workflow screens</td><td>CRUD UI, approval queue, responsive UI</td></tr>
+              <tr><td><strong>Member 7</strong></td><td>QA / DevOps / Documentation</td><td>Test, deployment, seed data, docs</td><td>Docker, demo data, test report, user manual</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="ket-luan">
+      <div class="container">
+        <div class="section-head">
+          <div class="kicker">10 · Conclusion</div>
+          <h2>Vì sao đề tài này đáng chọn?</h2>
+          <p class="sub">OmniBiz AI đủ thực tế để thuyết phục doanh nghiệp, đủ kỹ thuật để thuyết phục hội đồng, và đủ AI để đúng xu hướng hiện tại.</p>
+        </div>
+
+        <div class="grid grid-3">
+          <div class="card">
+            <h3>Đúng bài toán thật</h3>
+            <p>Doanh nghiệp cần kiểm soát chi phí, KPI, phê duyệt và báo cáo — không phải một app CRUD đơn giản.</p>
+          </div>
+          <div class="card">
+            <h3>Đủ chiều sâu kỹ thuật</h3>
+            <p>Có RBAC, workflow engine, analytics, realtime notification, AI layer, audit log và deployment.</p>
+          </div>
+          <div class="card">
+            <h3>Dễ demo, dễ mở rộng</h3>
+            <p>Có kịch bản demo rõ ràng: tạo dữ liệu → AI cảnh báo → duyệt → dashboard → hỏi đáp AI.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <strong>OmniBiz AI</strong> — Intelligent Operating System for SME Decision-Making.
+      <br/>Tài liệu HTML phân tích đề tài tốt nghiệp, thiết kế cho nhóm 7 người.
+    </div>
+  </footer>
+</body>
+</html>
