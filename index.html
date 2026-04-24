@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DATN AI Hub - So sánh 2 đề tài</title>
+  <title>DATN AI Hub - 2 đề tài trong tab</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root{
@@ -19,10 +19,12 @@
       --green:#34d399;
       --orange:#fb923c;
       --red:#f87171;
-      --shadow:0 22px 70px rgba(0,0,0,.32);
+      --yellow:#facc15;
+      --shadow:0 22px 70px rgba(0,0,0,.3);
     }
 
     *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
     body{
       min-height:100vh;
       font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -32,7 +34,7 @@
         radial-gradient(circle at 94% 8%,rgba(167,139,250,.14),transparent 30%),
         radial-gradient(circle at 50% 100%,rgba(52,211,153,.08),transparent 35%),
         var(--bg);
-      line-height:1.55;
+      line-height:1.58;
     }
     body::before{
       content:"";
@@ -44,17 +46,10 @@
     }
 
     .wrap{
-      width:min(1040px,92vw);
+      width:min(1120px,92vw);
       margin:0 auto;
-      padding:34px 0 42px;
+      padding:30px 0 44px;
       position:relative;
-    }
-    .top{
-      display:grid;
-      grid-template-columns:minmax(0,1fr) auto;
-      gap:18px;
-      align-items:end;
-      margin-bottom:18px;
     }
     .brand{
       display:flex;
@@ -74,6 +69,20 @@
       background:linear-gradient(135deg,var(--blue),var(--violet));
       box-shadow:0 12px 28px rgba(56,189,248,.2);
     }
+    .top{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) auto;
+      gap:18px;
+      align-items:end;
+      margin-bottom:18px;
+    }
+    .eyebrow,.kicker{
+      color:var(--blue);
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+    }
     .eyebrow{
       display:inline-flex;
       width:max-content;
@@ -81,34 +90,29 @@
       padding:7px 11px;
       border:1px solid rgba(56,189,248,.24);
       border-radius:999px;
-      color:var(--blue);
       background:rgba(56,189,248,.07);
-      font-size:11px;
-      font-weight:900;
-      letter-spacing:.16em;
-      text-transform:uppercase;
     }
     h1{
-      max-width:780px;
+      max-width:850px;
       margin:12px 0 8px;
       font-size:clamp(34px,6vw,66px);
       line-height:.98;
       letter-spacing:-.07em;
       font-weight:900;
     }
-    h1 span{
+    h1 span,h2 span{
       background:linear-gradient(90deg,var(--blue),var(--violet),var(--green));
       -webkit-background-clip:text;
       background-clip:text;
       color:transparent;
     }
     .lead{
-      max-width:760px;
+      max-width:820px;
       color:var(--muted);
       font-size:15px;
     }
     .quick-note{
-      width:240px;
+      width:250px;
       padding:14px;
       border:1px solid var(--line);
       border-radius:18px;
@@ -125,11 +129,11 @@
       display:grid;
       grid-template-columns:repeat(2,1fr);
       gap:8px;
-      margin:18px 0;
+      margin:18px 0 20px;
       padding:8px;
       border:1px solid var(--line);
       border-radius:20px;
-      background:rgba(13,27,46,.86);
+      background:rgba(13,27,46,.88);
       box-shadow:0 14px 36px rgba(0,0,0,.22);
       backdrop-filter:blur(16px);
     }
@@ -154,20 +158,68 @@
     .topic.active{display:block}
     @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
-    .hero-card{
+    section.block{margin-bottom:18px}
+    .section-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap:18px;
+      margin:26px 0 12px;
+    }
+    h2{
+      margin-top:6px;
+      font-size:clamp(26px,4vw,42px);
+      line-height:1.05;
+      letter-spacing:-.055em;
+    }
+    h3{
+      margin-bottom:9px;
+      font-size:16px;
+      line-height:1.25;
+    }
+    p,li,td{
+      color:var(--muted);
+      font-size:13px;
+    }
+    ul{padding-left:18px}
+    li{margin:6px 0}
+    strong{color:var(--text)}
+    .sub{
+      max-width:520px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .hero-card,.grid-2,.compare{
       display:grid;
-      grid-template-columns:minmax(0,1.08fr) minmax(290px,.92fr);
+      grid-template-columns:repeat(2,minmax(0,1fr));
       gap:14px;
-      margin-bottom:14px;
+    }
+    .grid-3{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:14px;
+    }
+    .grid-4{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+    }
+    .card,.mini{
+      position:relative;
+      overflow:hidden;
+      border:1px solid var(--line);
+      background:linear-gradient(145deg,rgba(19,43,72,.86),rgba(13,27,46,.9));
+      box-shadow:0 12px 40px rgba(0,0,0,.18);
     }
     .card{
-      overflow:hidden;
-      position:relative;
       padding:20px;
-      border:1px solid var(--line);
       border-radius:22px;
-      background:linear-gradient(145deg,rgba(19,43,72,.86),rgba(13,27,46,.9));
-      box-shadow:var(--shadow);
+    }
+    .mini{
+      padding:16px;
+      border-radius:18px;
+      background:rgba(13,27,46,.72);
     }
     .card.glow::after{
       content:"";
@@ -181,33 +233,6 @@
       filter:blur(10px);
     }
     .card > *{position:relative}
-    .kicker{
-      color:var(--blue);
-      font-size:11px;
-      font-weight:900;
-      letter-spacing:.16em;
-      text-transform:uppercase;
-    }
-    h2{
-      margin:8px 0 10px;
-      font-size:clamp(26px,4vw,42px);
-      line-height:1.04;
-      letter-spacing:-.055em;
-    }
-    h2 span{
-      background:linear-gradient(90deg,var(--blue),var(--violet),var(--green));
-      -webkit-background-clip:text;
-      background-clip:text;
-      color:transparent;
-    }
-    h3{
-      margin-bottom:9px;
-      font-size:16px;
-      line-height:1.25;
-    }
-    p,li{color:var(--muted);font-size:13px}
-    ul{padding-left:18px}
-    li{margin:6px 0}
     .tags{
       display:flex;
       flex-wrap:wrap;
@@ -234,6 +259,7 @@
       display:grid;
       grid-template-columns:repeat(2,1fr);
       gap:10px;
+      margin-top:8px;
     }
     .stat{
       padding:14px;
@@ -255,63 +281,94 @@
       font-weight:700;
     }
 
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:14px;
-      margin-bottom:14px;
-    }
-    .mini{
-      padding:17px;
+    .table-wrap{
+      overflow:auto;
       border:1px solid var(--line);
       border-radius:20px;
       background:rgba(13,27,46,.72);
     }
-    .roadmap{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:10px;
-      margin-top:10px;
+    table{
+      width:100%;
+      min-width:760px;
+      border-collapse:collapse;
     }
-    .phase{
-      padding:13px;
+    th,td{
+      padding:13px 14px;
+      border-bottom:1px solid rgba(255,255,255,.07);
+      text-align:left;
+      vertical-align:top;
+    }
+    th{
+      color:var(--blue);
+      background:rgba(56,189,248,.055);
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+    tr:last-child td{border-bottom:0}
+
+    .flow{
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:10px;
+    }
+    .step,.phase{
+      padding:14px;
       border:1px solid rgba(255,255,255,.08);
       border-radius:16px;
       background:rgba(255,255,255,.04);
     }
-    .phase b{
+    .step b,.phase b{
       display:block;
       color:var(--blue);
       font-size:12px;
       margin-bottom:4px;
     }
-    .phase span{
+    .step span,.phase span{
       display:block;
       color:var(--muted);
       font-size:12px;
     }
-    .compare{
+    .roadmap{
       display:grid;
-      grid-template-columns:repeat(2,1fr);
-      gap:14px;
-      margin-top:4px;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+    }
+    .qa-list{display:grid;gap:10px}
+    .qa{
+      padding:15px;
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:rgba(13,27,46,.72);
+    }
+    .qa h3{color:var(--blue)}
+    code{
+      color:var(--green);
+      background:rgba(52,211,153,.1);
+      padding:1px 5px;
+      border-radius:6px;
+      font-family:"Consolas","Cascadia Code",monospace;
+      font-size:.92em;
     }
     .footer{
-      margin-top:20px;
+      margin-top:22px;
       padding-top:18px;
       border-top:1px solid var(--line);
       color:var(--dim);
       font-size:12px;
     }
 
-    @media(max-width:860px){
-      .top,.hero-card,.grid,.compare{grid-template-columns:1fr}
+    @media(max-width:960px){
+      .top,.hero-card,.grid-2,.grid-3,.grid-4,.compare,.flow,.roadmap{grid-template-columns:1fr}
       .quick-note{width:auto}
       .tabs{position:static}
+      .section-head{display:block}
+      .sub{margin-top:8px}
     }
     @media(max-width:560px){
-      .wrap{width:min(100% - 20px,1040px);padding-top:22px}
-      .tabs,.stats,.roadmap{grid-template-columns:1fr}
+      .wrap{width:min(100% - 20px,1120px);padding-top:22px}
+      .tabs,.stats{grid-template-columns:1fr}
       .tab{padding:12px}
       .card{padding:17px}
     }
@@ -323,16 +380,16 @@
 
     <header class="top">
       <div>
-        <div class="eyebrow">So sánh nhanh 2 đề tài</div>
-        <h1>Chọn chủ đề</h1>
+        <div class="eyebrow">2 đề tài tốt nghiệp · xem bằng tab</div>
+        <h1><span>Đầy đủ nội dung</span><br>không cần chuyển trang</h1>
         <p class="lead">
-          Dùng tab bên dưới để chuyển giữa hai hướng đề tài. Nội dung được rút gọn để dễ đọc,
-          tập trung vào mục tiêu, MVP, điểm bảo vệ, rủi ro và kế hoạch triển khai.
+          Mỗi tab chứa bản phân tích hoàn chỉnh của một đề tài: mục tiêu, phạm vi, chức năng,
+          kiến trúc, AI, rủi ro, roadmap, phân công và câu hỏi bảo vệ.
         </p>
       </div>
       <aside class="quick-note">
-        <strong>Ưu tiên hiển thị</strong>
-        Một màn hình đọc nhanh, không redirect, không mở trang mới khi đổi chủ đề.
+        <strong>Cách dùng</strong>
+        Chọn tab để đổi chủ đề. Nội dung được giữ trong cùng một trang để đọc và trình bày dễ hơn.
       </aside>
     </header>
 
@@ -341,151 +398,406 @@
       <button class="tab" role="tab" aria-selected="false" aria-controls="topic-meeting" onclick="showTopic(1)">Meeting AI Analysis</button>
     </nav>
 
-    <section class="topic active" id="topic-omnibiz" role="tabpanel">
-      <div class="hero-card">
-        <article class="card glow">
+    <article class="topic active" id="topic-omnibiz" role="tabpanel">
+      <section class="block hero-card">
+        <div class="card glow">
           <div class="kicker">Enterprise AI · SME</div>
-          <h2><span>OmniBiz AI</span><br>AI Business Operating System</h2>
+          <h2><span>OmniBiz AI</span><br>AI Business Operating System cho SME</h2>
           <p>
-            Hệ thống vận hành doanh nghiệp cho SME: tài chính, KPI/OKR, nhân sự, workflow phê duyệt
-            và AI Copilot hỗ trợ phân tích dữ liệu nội bộ.
+            Hệ thống vận hành doanh nghiệp tích hợp tài chính, KPI/OKR, nhân sự, workflow phê duyệt
+            và AI Copilot, giúp doanh nghiệp vừa và nhỏ ra quyết định dựa trên dữ liệu thay vì cảm tính.
           </p>
           <div class="tags">
             <span class="tag blue">Finance</span>
             <span class="tag violet">Workflow</span>
             <span class="tag green">AI Copilot</span>
             <span class="tag orange">KPI/OKR</span>
+            <span class="tag">RBAC</span>
           </div>
-        </article>
+        </div>
         <aside class="card">
           <h3>Chỉ số nhanh</h3>
           <div class="stats">
-            <div class="stat"><strong>5</strong><span>module lõi</span></div>
-            <div class="stat"><strong>7</strong><span>vai trò nhóm</span></div>
-            <div class="stat"><strong>12</strong><span>tuần MVP</span></div>
-            <div class="stat"><strong>AI</strong><span>risk + report + RAG</span></div>
+            <div class="stat"><strong>5</strong><span>module nghiệp vụ lõi</span></div>
+            <div class="stat"><strong>7</strong><span>vai trò phát triển</span></div>
+            <div class="stat"><strong>12</strong><span>tuần triển khai MVP</span></div>
+            <div class="stat"><strong>AI</strong><span>Copilot + risk + report</span></div>
           </div>
         </aside>
-      </div>
+      </section>
 
-      <div class="grid">
-        <article class="mini">
-          <h3>MVP nên làm</h3>
-          <ul>
-            <li>Dashboard điều hành theo role.</li>
-            <li>Quản lý ngân sách và đề nghị chi.</li>
-            <li>KPI/OKR, workflow duyệt, audit log.</li>
-            <li>AI hỏi đáp và tóm tắt báo cáo.</li>
-          </ul>
-        </article>
-        <article class="mini">
-          <h3>Điểm bảo vệ</h3>
-          <ul>
-            <li>Nghiệp vụ thật, không chỉ CRUD.</li>
-            <li>RBAC, workflow engine, dashboard.</li>
-            <li>AI dùng dữ liệu nội bộ có nguồn.</li>
-            <li>Dễ chia việc cho nhóm đông.</li>
-          </ul>
-        </article>
-        <article class="mini">
-          <h3>Rủi ro</h3>
-          <ul>
-            <li>Scope rộng, dễ thành ERP quá lớn.</li>
-            <li>Cần seed data đủ thật để demo.</li>
-            <li>AI phải có citation để tránh trả lời mơ hồ.</li>
-          </ul>
-        </article>
-      </div>
-
-      <article class="card">
-        <h3>Roadmap 12 tuần</h3>
-        <div class="roadmap">
-          <div class="phase"><b>Tuần 1-4</b><span>Scope, database, auth, finance, KPI core.</span></div>
-          <div class="phase"><b>Tuần 5-8</b><span>Workflow, dashboard, AI Copilot, báo cáo.</span></div>
-          <div class="phase"><b>Tuần 9-12</b><span>Testing, hardening, demo data, báo cáo và slide.</span></div>
+      <section class="block">
+        <div class="section-head">
+          <div>
+            <div class="kicker">01 · What / Where / Who / How</div>
+            <h2>Bản chất đề tài</h2>
+          </div>
+          <p class="sub">Tên đề tài trả lời đủ: làm gì, dùng ở đâu, cho ai và giải quyết bằng cách nào.</p>
         </div>
-      </article>
-    </section>
+        <div class="grid-4">
+          <div class="mini"><h3>WHAT</h3><p><strong>Business Operating System</strong> thống nhất tài chính, KPI, nhân sự và quy trình.</p></div>
+          <div class="mini"><h3>WHERE</h3><p>Áp dụng cho SME, phòng tài chính, HR, manager và ban giám đốc.</p></div>
+          <div class="mini"><h3>WHO</h3><p>Director, Manager, Accountant, HR và Staff có dashboard, quyền hạn, tác vụ riêng.</p></div>
+          <div class="mini"><h3>HOW</h3><p>AI Copilot, workflow phê duyệt, analytics, cảnh báo rủi ro và dự báo xu hướng.</p></div>
+        </div>
+      </section>
 
-    <section class="topic" id="topic-meeting" role="tabpanel">
-      <div class="hero-card">
-        <article class="card glow">
+      <section class="block">
+        <div class="section-head">
+          <div>
+            <div class="kicker">02 · Problem Statement</div>
+            <h2>Chỗ ngứa của thời đại</h2>
+          </div>
+          <p class="sub">Doanh nghiệp nhỏ không thiếu dữ liệu, nhưng thiếu hệ thống biến dữ liệu thành hành động.</p>
+        </div>
+        <div class="grid-3">
+          <div class="mini"><h3>Dữ liệu rời rạc</h3><p>Excel, Zalo, Google Sheet và phần mềm kế toán tách rời khiến tổng hợp, audit và ra quyết định chậm.</p></div>
+          <div class="mini"><h3>Quy trình thủ công</h3><p>Đề nghị chi, duyệt ngân sách, đánh giá KPI phụ thuộc tin nhắn hoặc giấy tờ, dễ thiếu minh bạch.</p></div>
+          <div class="mini"><h3>AI chưa gắn nghiệp vụ</h3><p>Nhiều hệ thống chỉ gắn chatbot. OmniBiz dùng AI trên ngân sách, KPI, dòng tiền và hiệu suất thật.</p></div>
+        </div>
+      </section>
+
+      <section class="block">
+        <div class="section-head">
+          <div>
+            <div class="kicker">03 · Scope</div>
+            <h2>Phạm vi MVP khả thi</h2>
+          </div>
+          <p class="sub">Không làm ERP quá rộng. Tập trung 5 module tạo giá trị rõ nhất và demo tốt.</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Module</th><th>Mục tiêu</th><th>MVP cần có</th><th>Điểm ăn điểm</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Finance</strong></td><td>Quản lý ngân sách, chi phí, dòng tiền.</td><td>Budget, payment request, transaction, wallet, cashflow chart.</td><td>AI cảnh báo vượt ngân sách, dự báo cash runway.</td></tr>
+              <tr><td><strong>KPI/OKR</strong></td><td>Theo dõi mục tiêu và hiệu suất.</td><td>OKR, KPI, check-in, duyệt kết quả, dashboard tiến độ.</td><td>AI phân tích hiệu suất, gợi ý hành động cải thiện.</td></tr>
+              <tr><td><strong>HR Basic</strong></td><td>Quản lý nhân sự nền tảng.</td><td>Employee, department, position, role, permission.</td><td>Role-based dashboard theo từng nhóm người dùng.</td></tr>
+              <tr><td><strong>Workflow Engine</strong></td><td>Chuẩn hóa phê duyệt nội bộ.</td><td>Template, approval step, condition, approve/reject, audit log.</td><td>Config rule theo số tiền, % budget, cấp bậc.</td></tr>
+              <tr><td><strong>AI Copilot</strong></td><td>Trợ lý phân tích dữ liệu doanh nghiệp.</td><td>Chat Q&A, insight, risk alert, report summary.</td><td>RAG + citation + biểu đồ tự động.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="block">
+        <div class="section-head">
+          <div>
+            <div class="kicker">04 · Features</div>
+            <h2>Chức năng chi tiết</h2>
+          </div>
+          <p class="sub">Đủ để viết proposal, chia task, thiết kế database và demo sản phẩm.</p>
+        </div>
+        <div class="grid-3">
+          <div class="mini"><h3>Dashboard điều hành</h3><ul><li>Tổng quan thu/chi, ngân sách, KPI.</li><li>Biểu đồ theo phòng ban, danh mục, thời gian.</li><li>Top rủi ro và dashboard theo role.</li></ul></div>
+          <div class="mini"><h3>Ngân sách & đề nghị chi</h3><ul><li>Tạo ngân sách theo kỳ/phòng ban.</li><li>Đề nghị thanh toán kèm line items, NCC, file.</li><li>Duyệt nhiều cấp và AI kiểm tra rủi ro.</li></ul></div>
+          <div class="mini"><h3>KPI/OKR</h3><ul><li>Tạo OKR, Key Result, KPI.</li><li>Phân bổ KPI cho phòng ban/nhân viên.</li><li>Check-in, tự tính điểm, cảnh báo KPI fail.</li></ul></div>
+          <div class="mini"><h3>AI Copilot</h3><ul><li>Hỏi “Tháng này phòng nào vượt ngân sách?”</li><li>Tạo báo cáo tháng/quý.</li><li>Gợi ý cắt chi, tăng ngân sách, điều chỉnh KPI.</li></ul></div>
+          <div class="mini"><h3>Workflow & Audit</h3><ul><li>Luồng duyệt theo nghiệp vụ.</li><li>Điều kiện theo số tiền, % ngân sách, vai trò.</li><li>Lịch sử approve/reject/comment.</li></ul></div>
+          <div class="mini"><h3>Bảo mật & phân quyền</h3><ul><li>Email/password, optional Google OAuth.</li><li>RBAC: Admin, Director, Manager, Accountant, HR, Staff.</li><li>Data scope theo quyền.</li></ul></div>
+        </div>
+      </section>
+
+      <section class="block">
+        <div class="section-head">
+          <div>
+            <div class="kicker">05 · Architecture</div>
+            <h2>Kiến trúc kỹ thuật</h2>
+          </div>
+          <p class="sub">Cân bằng giữa độ ổn định, khả năng demo và độ sâu kỹ thuật.</p>
+        </div>
+        <div class="grid-2">
+          <div class="mini"><h3>Frontend</h3><p><code>Next.js</code>, React, Tailwind CSS, Recharts/ECharts cho dashboard, form nghiệp vụ, workflow visual, AI chat panel.</p></div>
+          <div class="mini"><h3>Backend API</h3><p><code>ASP.NET Core Web API</code>, EF Core, Clean Architecture, SignalR cho nghiệp vụ, phân quyền, workflow, notification.</p></div>
+          <div class="mini"><h3>Database</h3><p>PostgreSQL hoặc SQL Server, Redis cache, audit log, workflow instance, KPI, ngân sách và giao dịch.</p></div>
+          <div class="mini"><h3>AI Layer</h3><p>LLM API, RAG, vector DB, prompt guardrails cho AI Copilot, risk scoring, summary và Q&A có nguồn.</p></div>
+        </div>
+      </section>
+
+      <section class="block">
+        <div class="section-head">
+          <div>
+            <div class="kicker">06 · AI Depth</div>
+            <h2>AI không chỉ là chatbot</h2>
+          </div>
+          <p class="sub">AI được gắn vào nghiệp vụ thật, có input rõ ràng và output kiểm chứng được.</p>
+        </div>
+        <div class="grid-4">
+          <div class="mini"><h3>AI Spend Guardrail</h3><p>Phân tích khoản chi vượt budget, trùng lặp, NCC bất thường, mức ưu tiên không hợp lý.</p></div>
+          <div class="mini"><h3>AI KPI Insight</h3><p>Phát hiện KPI tụt, phòng ban chậm tiến độ, nhân viên cần hỗ trợ, mục tiêu thiếu thực tế.</p></div>
+          <div class="mini"><h3>AI Report Writer</h3><p>Tự tạo báo cáo tháng/quý kèm số liệu, biểu đồ, nhận xét và khuyến nghị.</p></div>
+          <div class="mini"><h3>AI Q&A + RAG</h3><p>Người dùng hỏi tiếng Việt, hệ thống trả lời dựa trên dữ liệu nội bộ và trích nguồn.</p></div>
+        </div>
+      </section>
+
+      <section class="block">
+        <div class="section-head">
+          <div>
+            <div class="kicker">07 · Demo Flow</div>
+            <h2>Luồng nghiệp vụ mẫu</h2>
+          </div>
+        </div>
+        <div class="flow">
+          <div class="step"><b>Bước 1</b><span>Staff tạo đề nghị chi marketing 80 triệu.</span></div>
+          <div class="step"><b>Bước 2</b><span>AI cảnh báo chiếm 45% ngân sách tháng.</span></div>
+          <div class="step"><b>Bước 3</b><span>Workflow chuyển Manager, rồi Director duyệt.</span></div>
+          <div class="step"><b>Bước 4</b><span>Dashboard cập nhật ngân sách và cashflow.</span></div>
+          <div class="step"><b>Bước 5</b><span>Director hỏi AI có nên duyệt campaign tiếp không.</span></div>
+        </div>
+      </section>
+
+      <section class="block">
+        <div class="section-head">
+          <div>
+            <div class="kicker">08 · Roadmap & Team</div>
+            <h2>Lộ trình và phân công</h2>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <h3>Roadmap 12 tuần</h3>
+            <div class="roadmap">
+              <div class="phase"><b>Tuần 1-2</b><span>Scope, use case, ERD, wireframe dashboard.</span></div>
+              <div class="phase"><b>Tuần 3-7</b><span>Auth, RBAC, finance, KPI, workflow, dashboard.</span></div>
+              <div class="phase"><b>Tuần 8-12</b><span>AI layer, testing, hardening, demo, báo cáo.</span></div>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Nhóm 7 người</h3>
+            <ul>
+              <li>Tech Lead/Backend: architecture, auth, RBAC, code review.</li>
+              <li>Backend Finance: budget, transaction, payment request.</li>
+              <li>Backend KPI/Workflow: OKR, check-in, approval engine.</li>
+              <li>AI Engineer: prompt, RAG, risk scoring, AI report.</li>
+              <li>Frontend Dashboard, Frontend Business UI, QA/DevOps/Docs.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="block compare">
+        <div class="mini"><h3>Vì sao đáng chọn?</h3><p>Đúng bài toán doanh nghiệp thật, đủ chiều sâu kỹ thuật với RBAC, workflow, analytics, realtime, AI layer và audit log.</p></div>
+        <div class="mini"><h3>Rủi ro chính</h3><p>Scope rộng. Cách xử lý là khóa MVP 5 module, chuẩn bị seed data thật và không cố làm ERP toàn diện.</p></div>
+      </section>
+    </article>
+
+    <article class="topic" id="topic-meeting" role="tabpanel">
+      <section class="block hero-card">
+        <div class="card glow">
           <div class="kicker">Speech AI · Productivity</div>
           <h2><span>Meeting AI Analysis</span><br>Biến cuộc họp thành công việc</h2>
           <p>
-            Nền tảng phân tích cuộc họp: chuyển audio thành transcript, tóm tắt nội dung,
-            trích quyết định/action items, tìm kiếm ngữ nghĩa và theo dõi task sau họp.
+            Nền tảng phân tích cuộc họp bằng AI: chuyển giọng nói thành văn bản, tóm tắt nội dung,
+            trích xuất quyết định, sinh action items, tìm kiếm ngữ nghĩa và theo dõi việc cần làm sau cuộc họp.
           </p>
           <div class="tags">
             <span class="tag blue">Whisper</span>
             <span class="tag violet">LLM</span>
             <span class="tag green">RAG</span>
             <span class="tag orange">Action Items</span>
+            <span class="tag">Task Board</span>
           </div>
-        </article>
+        </div>
         <aside class="card">
-          <h3>Chỉ số nhanh</h3>
+          <h3>Đánh giá khả thi</h3>
           <div class="stats">
             <div class="stat"><strong>5</strong><span>module lõi</span></div>
-            <div class="stat"><strong>20+</strong><span>mẫu đánh giá</span></div>
+            <div class="stat"><strong>20+</strong><span>mẫu audio đánh giá</span></div>
             <div class="stat"><strong>12</strong><span>sprint triển khai</span></div>
             <div class="stat"><strong>86</strong><span>điểm khả thi</span></div>
           </div>
         </aside>
-      </div>
+      </section>
 
-      <div class="grid">
-        <article class="mini">
-          <h3>MVP nên làm</h3>
-          <ul>
-            <li>Upload audio và xử lý async.</li>
-            <li>Transcript có timestamp.</li>
-            <li>Summary, decisions, action items.</li>
-            <li>Task board và semantic search.</li>
-          </ul>
-        </article>
-        <article class="mini">
-          <h3>Điểm bảo vệ</h3>
-          <ul>
-            <li>Pipeline AI end-to-end rõ ràng.</li>
-            <li>Có grounding và citation timestamp.</li>
-            <li>Đo WER, precision/recall action items.</li>
-            <li>Demo trực quan bằng cuộc họp thật.</li>
-          </ul>
-        </article>
-        <article class="mini">
-          <h3>Rủi ro</h3>
-          <ul>
-            <li>Tiếng Việt có giọng vùng miền, nhiễu.</li>
-            <li>LLM có thể hallucinate action items.</li>
-            <li>File dài cần queue và chunking.</li>
-          </ul>
-        </article>
-      </div>
-
-      <article class="card">
-        <h3>Roadmap 12 tuần</h3>
-        <div class="roadmap">
-          <div class="phase"><b>Tuần 1-4</b><span>Upload, Whisper, transcript, summary, action items.</span></div>
-          <div class="phase"><b>Tuần 5-8</b><span>Dashboard, search, notification, export biên bản.</span></div>
-          <div class="phase"><b>Tuần 9-12</b><span>Benchmark AI, security, user testing, demo và báo cáo.</span></div>
+      <section class="block">
+        <div class="section-head">
+          <div>
+            <div class="kicker">01 · Tổng quan</div>
+            <h2>Không chỉ transcript</h2>
+          </div>
+          <p class="sub">Điểm mạnh là biến cuộc họp thành tri thức có cấu trúc và công việc có thể theo dõi.</p>
         </div>
-      </article>
-    </section>
+        <div class="grid-3">
+          <div class="mini"><h3>Vấn đề thực tế</h3><p>Sau cuộc họp, nhóm dễ mất thông tin: ai làm gì, deadline nào, quyết định nào đã chốt.</p></div>
+          <div class="mini"><h3>Mục tiêu</h3><p>Tạo transcript timestamp, tóm tắt, quyết định, action items, task và semantic search.</p></div>
+          <div class="mini"><h3>Phạm vi MVP</h3><p>Nhận file audio/video sau họp, xử lý async, human-in-the-loop khi xác nhận action items.</p></div>
+        </div>
+      </section>
 
-    <section class="compare">
-      <article class="mini">
-        <h3>Chọn OmniBiz nếu...</h3>
-        <p>Nhóm muốn đề tài rộng về nghiệp vụ, nhiều module để chia việc, dashboard và workflow là điểm chính.</p>
-      </article>
-      <article class="mini">
-        <h3>Chọn Meeting AI nếu...</h3>
-        <p>Nhóm muốn tập trung vào AI pipeline, NLP, RAG, đo lường chất lượng và demo bằng dữ liệu cuộc họp thật.</p>
-      </article>
-    </section>
+      <section class="block">
+        <div class="section-head">
+          <div>
+            <div class="kicker">02 · Giá trị</div>
+            <h2>Khoa học và ứng dụng</h2>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="card"><h3>Giá trị khoa học</h3><p>Kết hợp Speech-to-Text, NLP, LLM structured extraction, vector embedding và information retrieval. Trọng tâm là thiết kế pipeline đáng tin cậy, kiểm soát hallucination và đánh giá đầu ra trên dữ liệu thật.</p></div>
+          <div class="card"><h3>Giá trị ứng dụng</h3><p>Phù hợp nhóm dự án, lớp học, startup, phòng ban nội bộ và nhóm làm việc online. Giảm thời gian viết biên bản, tăng truy vết quyết định và làm rõ trách nhiệm sau họp.</p></div>
+        </div>
+      </section>
+
+      <section class="block">
+        <div class="section-head">
+          <div>
+            <div class="kicker">03 · Architecture</div>
+            <h2>Module hệ thống</h2>
+          </div>
+          <p class="sub">Mỗi module có input, output, trách nhiệm và dữ liệu lưu trữ rõ ràng.</p>
+        </div>
+        <div class="grid-3">
+          <div class="mini"><h3>Frontend</h3><p>Dashboard, upload meeting, transcript viewer, summary panel, task board, semantic search, export biên bản.</p></div>
+          <div class="mini"><h3>Backend API</h3><p>Auth, workspace, meeting CRUD, file metadata, job status, task management, notification, phân quyền.</p></div>
+          <div class="mini"><h3>AI Worker</h3><p>Preprocess audio, gọi Whisper, hậu xử lý transcript, tóm tắt, embedding và validate schema.</p></div>
+          <div class="mini"><h3>Data Layer</h3><p>PostgreSQL, pgvector, object storage cho audio, Redis queue/cache.</p></div>
+          <div class="mini"><h3>Observability</h3><p>Log job, thời gian xử lý, lỗi API, chi phí token, audit log truy cập transcript.</p></div>
+          <div class="mini"><h3>Tech Stack</h3><p>Next.js/React, NestJS/FastAPI, PostgreSQL, Redis, S3/MinIO, Whisper, LLM structured output.</p></div>
+        </div>
+      </section>
+
+      <section class="block">
+        <div class="section-head">
+          <div>
+            <div class="kicker">04 · Business Flow</div>
+            <h2>Luồng từ audio đến task</h2>
+          </div>
+        </div>
+        <div class="flow">
+          <div class="step"><b>1. Upload</b><span>User upload MP3/M4A/WAV, backend tạo meeting record và job queue.</span></div>
+          <div class="step"><b>2. AI Processing</b><span>Worker transcribe, cleanup, summary và extract action items.</span></div>
+          <div class="step"><b>3. Review</b><span>User kiểm tra transcript, sửa tên riêng, xác nhận action items.</span></div>
+          <div class="step"><b>4. Follow-up</b><span>Action item chuyển thành task có assignee, due date, status.</span></div>
+          <div class="step"><b>5. Search</b><span>Tìm lại quyết định bằng semantic search và citation timestamp.</span></div>
+        </div>
+      </section>
+
+      <section class="block">
+        <div class="section-head">
+          <div>
+            <div class="kicker">05 · AI Pipeline</div>
+            <h2>Kiểm soát chất lượng đầu ra AI</h2>
+          </div>
+          <p class="sub">Câu trả lời cho “AI có bịa không?” là grounding, schema validation, citation và human review.</p>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <h3>Pipeline xử lý</h3>
+            <ul>
+              <li><strong>Audio preprocessing:</strong> convert <code>16kHz mono</code>, giảm nhiễu cơ bản, chunk 5-10 phút.</li>
+              <li><strong>Speech-to-text:</strong> Whisper trả transcript và segment timestamp, lưu transcript thô.</li>
+              <li><strong>Transcript cleanup:</strong> LLM chỉ sửa dấu câu, tên riêng, thuật ngữ, không đổi ý nghĩa.</li>
+              <li><strong>Structured extraction:</strong> sinh summary, decisions, risks, action_items theo JSON schema.</li>
+              <li><strong>Embedding & RAG:</strong> chunk transcript, embed, lưu pgvector, trả lời kèm timestamp nguồn.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Prompt contract</h3>
+            <ul>
+              <li>Chỉ sử dụng thông tin trong transcript, không suy diễn bên ngoài.</li>
+              <li>Nếu không có bằng chứng rõ ràng, không tạo action item.</li>
+              <li>Mỗi action item có content, assignee_hint, due_date_hint, source_timestamp.</li>
+              <li>Đầu ra phải là JSON hợp lệ và backend validate trước khi lưu.</li>
+              <li>Khi không chắc chắn, trả confidence thấp để user xác nhận.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="block">
+        <div class="section-head">
+          <div>
+            <div class="kicker">06 · Database</div>
+            <h2>Schema gợi ý</h2>
+          </div>
+        </div>
+        <div class="grid-3">
+          <div class="mini"><h3>Người dùng</h3><p><code>users</code>, <code>workspaces</code>, <code>workspace_members</code>, <code>roles</code> cho đăng nhập, phân quyền, nhóm.</p></div>
+          <div class="mini"><h3>Cuộc họp</h3><p><code>meetings</code>, <code>meeting_files</code>, <code>transcript_segments</code>, <code>meeting_summaries</code>.</p></div>
+          <div class="mini"><h3>Công việc</h3><p><code>action_items</code>, <code>tasks</code>, <code>task_comments</code>, <code>notifications</code>.</p></div>
+        </div>
+      </section>
+
+      <section class="block">
+        <div class="section-head">
+          <div>
+            <div class="kicker">07 · Đánh giá</div>
+            <h2>Thực nghiệm cần có</h2>
+          </div>
+          <p class="sub">Nên có 20 cuộc họp/đoạn họp, nghe thủ công để tạo ground truth.</p>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <h3>Tiêu chí đo</h3>
+            <ul>
+              <li>WER/CER transcript tiếng Việt, mục tiêu dưới 18% với audio tương đối sạch.</li>
+              <li>Precision action items trên 80%, recall trên 70%.</li>
+              <li>Search hit rate trên 75% với câu hỏi tự nhiên.</li>
+              <li>Processing time dưới 3 phút cho audio demo hợp lý.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Cách làm</h3>
+            <ul>
+              <li>Thu mẫu họp nhóm đồ án, họp lớp, họp online, nhiều giọng vùng miền.</li>
+              <li>Tạo ground truth bằng transcript/action items thủ công.</li>
+              <li>So sánh AI với ground truth để tính WER/CER và precision/recall.</li>
+              <li>Khảo sát người dùng bằng thang Likert hoặc SUS.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="block">
+        <div class="section-head">
+          <div>
+            <div class="kicker">08 · Rủi ro</div>
+            <h2>Ma trận rủi ro kỹ thuật</h2>
+          </div>
+        </div>
+        <div class="grid-3">
+          <div class="mini"><h3>Độ chính xác tiếng Việt</h3><p>Giọng vùng miền, nói chồng và nhiễu làm transcript sai. Giảm thiểu bằng preprocessing, chỉnh transcript và đo WER.</p></div>
+          <div class="mini"><h3>LLM hallucination</h3><p>Model có thể sinh action item không có thật. Giảm bằng schema, grounding, citation và user confirm.</p></div>
+          <div class="mini"><h3>Chi phí API</h3><p>Cuộc họp dài tạo nhiều token. Giảm bằng giới hạn dung lượng, chunking, cache và model nhỏ cho tác vụ đơn giản.</p></div>
+          <div class="mini"><h3>Bảo mật dữ liệu</h3><p>Audio có thể nhạy cảm. Cần RBAC, mã hóa storage, signed URL, audit log và policy xóa file.</p></div>
+          <div class="mini"><h3>File lớn</h3><p>Audio 1-2 giờ dễ timeout. Cần queue async, polling/SSE job status và upload object storage.</p></div>
+          <div class="mini"><h3>Scope creep</h3><p>Tránh bot realtime, diarization, calendar integration trong MVP. Đưa vào future work.</p></div>
+        </div>
+      </section>
+
+      <section class="block">
+        <div class="section-head">
+          <div>
+            <div class="kicker">09 · Roadmap</div>
+            <h2>Kế hoạch 12 tuần</h2>
+          </div>
+        </div>
+        <div class="roadmap">
+          <div class="phase"><b>Tuần 1-4</b><span>Khảo sát, DB, auth, upload, Whisper, summary, action items, semantic search bản đầu.</span></div>
+          <div class="phase"><b>Tuần 5-8</b><span>Dashboard, search UI, notification, audio player timestamp, export PDF, deploy demo.</span></div>
+          <div class="phase"><b>Tuần 9-12</b><span>Security, user testing, benchmark AI, load test nhẹ, báo cáo, slide và rehearsal.</span></div>
+        </div>
+      </section>
+
+      <section class="block">
+        <div class="section-head">
+          <div>
+            <div class="kicker">10 · Bảo vệ</div>
+            <h2>Câu hỏi hội đồng</h2>
+          </div>
+        </div>
+        <div class="qa-list">
+          <div class="qa"><h3>Vì sao không dùng transcript có sẵn của Google Meet hoặc Zoom?</h3><p>Transcript có sẵn chỉ là văn bản thô. Hệ thống này tạo summary, decisions, action items, task, semantic search và citation timestamp.</p></div>
+          <div class="qa"><h3>Làm sao chứng minh action items đúng?</h3><p>Dùng ground truth từ cuộc họp mẫu, đo precision/recall, mỗi action item có timestamp nguồn, confidence và user xác nhận.</p></div>
+          <div class="qa"><h3>Độ chính xác tiếng Việt xử lý ra sao?</h3><p>Không cam kết tuyệt đối. Nhóm đo WER/CER, cho phép sửa transcript, lưu segment timestamp và cải thiện bằng preprocessing.</p></div>
+          <div class="qa"><h3>Bảo mật dữ liệu cuộc họp?</h3><p>Cần authentication, workspace RBAC, signed URL, mã hóa storage, không expose API key, audit log và chính sách xóa audio.</p></div>
+          <div class="qa"><h3>Cuộc họp dài 2 giờ xử lý thế nào?</h3><p>Không xử lý trong request đồng bộ. Dùng queue async, chunk audio, polling/SSE trạng thái và notification khi xong.</p></div>
+        </div>
+      </section>
+    </article>
 
     <footer class="footer">
-      DATN AI Hub - bản tab tổng gọn, chuyển chủ đề trong cùng một trang.
+      DATN AI Hub - một trang tổng, hai tab, đầy đủ nội dung phân tích của cả hai đề tài.
     </footer>
   </main>
 
@@ -499,6 +811,7 @@
       document.querySelectorAll('.topic').forEach((topic, i) => {
         topic.classList.toggle('active', i === index);
       });
+      window.scrollTo({top:0, behavior:'smooth'});
     }
   </script>
 </body>
